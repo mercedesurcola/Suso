@@ -1117,13 +1117,7 @@
         <div class="form-group"><label>Descripción</label><textarea id="txt_contact_lead" rows="2"></textarea></div>
       </div>
 
-      <div class="admin-card">
-        <h4>🧭 Menú de navegación</h4>
-        <div class="form-group"><label>Sección Alquiler</label><input type="text" id="txt_nav_rental"></div>
-        <div class="form-group"><label>Sección Servicios</label><input type="text" id="txt_nav_services"></div>
-        <div class="form-group"><label>Sección Galería</label><input type="text" id="txt_nav_gallery"></div>
-        <div class="form-group"><label>Sección Contacto</label><input type="text" id="txt_nav_contact"></div>
-      </div>
+
 
       <div style="display:flex;gap:.8rem;flex-wrap:wrap;margin-top:1rem;align-items:center">
         <button class="btn-translate" onclick="translateTexts()">🌐 Traducir automáticamente</button>
@@ -1363,8 +1357,8 @@ const TEXT_KEYS = ['hero_tag','hero_title','hero_sub','hero_cta1','hero_cta2',
   'rental_tag','rental_title','rental_lead',
   'services_tag','services_title','services_lead',
   'gallery_tag','gallery_title',
-  'contact_tag','contact_title','contact_lead',
-  'nav_rental','nav_services','nav_gallery','nav_contact'];
+  'contact_tag','contact_title','contact_lead'];
+// Nav names are managed exclusively from the Secciones tab
 
 function buildTextsTab() {
   // Populate from siteData
@@ -1564,15 +1558,17 @@ function commitSectionName(id) {
   const fixed = FIXED_SECTIONS.find(f => f.id === id);
   if (fixed) {
     fixed.names.es = newName;
-    // Also update i18n so setLang picks it up
+    // Update i18n so setLang picks it up
     const keyMap = { alquiler:'nav_rental', servicios:'nav_services', galeria:'nav_gallery', contacto:'nav_contact' };
     const key = keyMap[id];
-    if (key) Object.keys(i18n).forEach(l => { if (i18n[l][key]) i18n[l][key] = newName; });
+    if (key) Object.keys(i18n).forEach(l => { if (i18n[l] && i18n[l][key]) i18n[l][key] = newName; });
   } else {
     const cs = siteData.customSections.find(s => s.id === id);
     if (cs) { if (!cs.names) cs.names = {}; cs.names.es = newName; }
   }
+  // Update nav + headings immediately
   renderNavSections();
+  updateFixedSectionHeadings();
 }
 
 function addCustomSection() {
@@ -1680,16 +1676,41 @@ async function saveSections() {
     });
   });
   try {
+    // Save fixed section custom names
+    const fixedNames = {};
+    FIXED_SECTIONS.forEach(f => { fixedNames[f.id] = f.names; });
     await fbPut('/sectionOrder', siteData.sectionOrder);
     await fbPut('/customSections', siteData.customSections.length ? siteData.customSections : []);
-    renderCustomSections();
+    await fbPut('/fixedSectionNames', fixedNames);
+    // Update DOM: nav links + section headings
     renderNavSections();
+    renderCustomSections();
+    updateFixedSectionHeadings();
     const msg = document.getElementById('saveMsg6');
     if (msg) { msg.classList.add('show'); setTimeout(() => msg.classList.remove('show'), 2500); }
     showDiag('✅ Secciones guardadas', 'green');
   } catch(e) {
     showDiag('❌ Error: ' + e.message, 'red');
   }
+}
+
+function updateFixedSectionHeadings() {
+  // Update visible section titles in the page body for fixed sections
+  const sectionHeadings = {
+    alquiler:  { tag: '[data-i18n="rental_tag"]',   title: '[data-i18n="rental_title"]' },
+    servicios: { tag: '[data-i18n="services_tag"]',  title: '[data-i18n="services_title"]' },
+    galeria:   { tag: '[data-i18n="gallery_tag"]',   title: '[data-i18n="gallery_title"]' },
+    contacto:  { tag: '[data-i18n="contact_tag"]',   title: '[data-i18n="contact_title"]' },
+  };
+  FIXED_SECTIONS.forEach(f => {
+    const name = f.names[lang] || f.names.es;
+    // Update nav link text
+    const navLink = document.querySelector('a[href="#' + f.id + '"]');
+    if (navLink) navLink.textContent = name;
+    // Update footer link
+    const footerLink = document.querySelector('footer a[href="#' + f.id + '"]');
+    if (footerLink) footerLink.textContent = name;
+  });
 }
 
 function renderNavSections() {
@@ -3104,6 +3125,13 @@ document.addEventListener('DOMContentLoaded', async ()=>{
       if (savedConfig.companyName) siteData.companyName = savedConfig.companyName;
       if (savedConfig.instagramUrl) siteData.instagramUrl = savedConfig.instagramUrl;
       if (savedConfig.fbUrl) { siteData.fbUrl = savedConfig.fbUrl; FB_URL = savedConfig.fbUrl; }
+    }
+    // Load fixed section custom names
+    const savedFixedNames = await fbGet('/fixedSectionNames');
+    if (savedFixedNames) {
+      FIXED_SECTIONS.forEach(f => {
+        if (savedFixedNames[f.id]) f.names = { ...f.names, ...savedFixedNames[f.id] };
+      });
     }
     if (savedOrder) siteData.sectionOrder = savedOrder;
     if (savedCustom) siteData.customSections = Array.isArray(savedCustom) ? savedCustom : [];
