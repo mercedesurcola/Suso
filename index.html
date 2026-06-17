@@ -662,7 +662,8 @@
 
 
   /* ── DESIGN TAB ── */
-  .color-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  .color-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-bottom: 1rem; }
+  @media (min-width: 480px) { .color-grid { grid-template-columns: 1fr 1fr; } }
   .color-field label { font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; color: var(--sand); display:block; margin-bottom:.4rem; }
   .color-row { display: flex; align-items: center; gap: .6rem; }
   .color-row input[type=color] { width: 44px; height: 36px; border: none; border-radius: 4px; cursor: pointer; background: none; padding: 0; }
@@ -3023,25 +3024,29 @@ async function saveAll() {
   siteData.email = document.getElementById('adm_email').value.trim();
   siteData.address = document.getElementById('adm_address').value.trim();
 
-  // Campers
-  siteData.campers = siteData.campers.map((_,i) => ({
-    id: siteData.campers[i].id,
-    name: document.getElementById(`c_name_${i}`).value,
-    desc: {
-      es: document.getElementById(`c_desc_es_${i}`)?.value || '',
-      en: document.getElementById(`c_desc_en_${i}`)?.value || '',
-      fr: document.getElementById(`c_desc_fr_${i}`)?.value || '',
-      de: document.getElementById(`c_desc_de_${i}`)?.value || '',
-      pt: document.getElementById(`c_desc_pt_${i}`)?.value || '',
-    },
-    features: (document.getElementById(`c_feat_${i}`)?.value||'').split('\n').filter(f=>f.trim()),
-    media: (() => {
-      const ytUrls = (document.getElementById(`c_media_${i}`)?.value||'').split('\n').map(u=>u.trim()).filter(Boolean);
-      let b64Imgs = [];
-      try { b64Imgs = JSON.parse(document.getElementById(`c_b64_${i}`)?.value||'[]'); } catch(e){}
-      return [...b64Imgs, ...ytUrls];
-    })(),
-  }));
+  // Campers - read from DOM, skip if element missing (deleted cards)
+  siteData.campers = siteData.campers.map((_,i) => {
+    const nameEl = document.getElementById(`c_name_${i}`);
+    if (!nameEl) return null; // card was deleted
+    return {
+      id: siteData.campers[i].id,
+      name: nameEl.value,
+      desc: {
+        es: document.getElementById(`c_desc_es_${i}`)?.value || '',
+        en: document.getElementById(`c_desc_en_${i}`)?.value || '',
+        fr: document.getElementById(`c_desc_fr_${i}`)?.value || '',
+        de: document.getElementById(`c_desc_de_${i}`)?.value || '',
+        pt: document.getElementById(`c_desc_pt_${i}`)?.value || '',
+      },
+      features: (document.getElementById(`c_feat_${i}`)?.value||'').split('\n').filter(f=>f.trim()),
+      media: (() => {
+        const ytUrls = (document.getElementById(`c_media_${i}`)?.value||'').split('\n').map(u=>u.trim()).filter(Boolean);
+        let b64Imgs = [];
+        try { b64Imgs = JSON.parse(document.getElementById(`c_b64_${i}`)?.value||'[]'); } catch(e){}
+        return [...b64Imgs, ...ytUrls];
+      })(),
+    };
+  }).filter(Boolean);
 
   // Services
   siteData.services = siteData.services.map((_,i) => ({
@@ -3118,6 +3123,10 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   const cloudData = await loadFromCloud();
   if (cloudData) {
     siteData = cloudData;
+    // Strip these — they're loaded separately from dedicated Firebase nodes below.
+    // Keeping stale values from /sitedata would overwrite newer data.
+    delete siteData.customSections;
+    delete siteData.sectionOrder;
   } else {
     const local = localStorage.getItem('acv_data');
     if (local) siteData = JSON.parse(local);
@@ -3163,7 +3172,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
     mergeTextsIntoI18n();
     renderCustomSections();
     renderNavSections();
-  } catch(e) { /* no extra data saved yet */ }
+  } catch(e) { showDiag('⚠️ Error cargando secciones: ' + e.message, 'red'); }
   mergeTextsIntoI18n();
   setLang('es');
   initReveal();
