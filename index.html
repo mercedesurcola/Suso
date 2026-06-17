@@ -2738,6 +2738,9 @@ function switchTab(id) {
   document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   event.target.classList.add('active');
+  // Always rebuild data-heavy tabs so they reflect current siteData
+  if (id === 'tab-sections') buildSectionsTab();
+  if (id === 'tab-texts')    buildTextsTab();
 }
 
 // ══════════════════════════════════════════════
@@ -3123,7 +3126,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   const cloudData = await loadFromCloud();
   if (cloudData) {
     siteData = cloudData;
-    // Strip these — they're loaded separately from dedicated Firebase nodes below.
+    // Strip these — loaded separately from dedicated Firebase nodes below.
     // Keeping stale values from /sitedata would overwrite newer data.
     delete siteData.customSections;
     delete siteData.sectionOrder;
@@ -3172,6 +3175,11 @@ document.addEventListener('DOMContentLoaded', async ()=>{
     mergeTextsIntoI18n();
     renderCustomSections();
     renderNavSections();
+    // If admin panel is already open, rebuild sections/texts tabs with fresh data
+    if (document.getElementById('admin-overlay') && document.getElementById('admin-overlay').classList.contains('visible')) {
+      buildSectionsTab();
+      buildTextsTab();
+    }
   } catch(e) { showDiag('⚠️ Error cargando secciones: ' + e.message, 'red'); }
   mergeTextsIntoI18n();
   setLang('es');
