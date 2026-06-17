@@ -910,7 +910,6 @@
 <section id="contacto">
   <div class="contact-inner">
     <div class="reveal">
-      <div class="section-tag" data-i18n="contact_tag">📍 Encuéntranos</div>
       <h2 class="section-title" data-i18n="contact_title">Hablemos</h2>
       <p class="section-lead" style="margin-bottom:2rem" data-i18n="contact_lead">Consulta disponibilidad, precios o cualquier duda. Respondemos rápido.</p>
       <div class="contact-detail">
@@ -2587,9 +2586,12 @@ function updateContactLinks() {
   const addrEl = document.getElementById('addressText');
   if (addrEl) addrEl.innerHTML = (siteData.address || '').replace(/\n/g,'<br>');
 
-  // Update Google Maps iframe
+  // Update Google Maps iframe from address text (no API key needed)
   const mapsEl = document.getElementById('mapsIframe');
-  if (mapsEl && siteData.mapsUrl) mapsEl.src = siteData.mapsUrl;
+  if (mapsEl && siteData.address) {
+    const encodedAddr = encodeURIComponent(siteData.address.replace(/\n/g, ', '));
+    mapsEl.src = 'https://maps.google.com/maps?q=' + encodedAddr + '&output=embed&hl=es';
+  }
 
   // Update company name everywhere
   updateCompanyName();
@@ -2702,7 +2704,7 @@ function showPanel() {
   document.getElementById('adminPanel').style.display='block';
   buildAdminPanel();
   // Show design + sections tabs only for admin user
-  const u = document.getElementById('loginUser').value.trim().toLowerCase();
+  const u = sessionStorage.getItem('acv_user') || document.getElementById('loginUser').value.trim().toLowerCase();
   const designBtn = document.getElementById('tab-design-btn');
   const sectionsBtn = document.getElementById('tab-sections-btn');
   if (u === 'admin') {
@@ -2719,6 +2721,7 @@ function doLogin() {
   const valid = CREDS.some(c => c.user.toLowerCase() === u && c.pass === p);
   if (valid) {
     sessionStorage.setItem('acv_auth','1');
+    sessionStorage.setItem('acv_user', u);
     document.getElementById('loginErr').style.display='none';
     showPanel();
   } else {
@@ -2770,20 +2773,12 @@ function buildCampersAdmin() {
   container.innerHTML = siteData.campers.map((c,i)=>`
     <div class="camper-admin-card" id="camper-admin-${i}">
       <div class="camper-admin-header">
-        <span id="c_preview_${i}">${c.icon||'🚐'} ${c.name}</span>
+        <span>${c.name}</span>
         <button class="btn-remove" onclick="removeCamper(${i})">Eliminar</button>
       </div>
-      <div class="two-col">
-        <div class="form-group">
-          <label>Emoji / ícono</label>
-          <input type="text" id="c_icon_${i}" value="${c.icon||'🚐'}" placeholder="🚐" maxlength="4"
-            oninput="document.getElementById('c_preview_'+${i}).innerHTML=this.value+' '+(document.getElementById('c_name_'+${i}).value||'')">
-        </div>
-        <div class="form-group">
-          <label>Nombre</label>
-          <input type="text" id="c_name_${i}" value="${c.name}"
-            oninput="document.getElementById('c_preview_'+${i}).innerHTML=(document.getElementById('c_icon_'+${i}).value||'')+' '+this.value">
-        </div>
+      <div class="form-group">
+        <label>Nombre</label>
+        <input type="text" id="c_name_${i}" value="${c.name}">
       </div>
       <div class="form-group">
         <label>Descripción (en español)</label>
@@ -3026,7 +3021,6 @@ async function saveAll() {
   // Campers
   siteData.campers = siteData.campers.map((_,i) => ({
     id: siteData.campers[i].id,
-    icon: document.getElementById(`c_icon_${i}`)?.value ?? siteData.campers[i].icon ?? '🚐',
     name: document.getElementById(`c_name_${i}`).value,
     desc: {
       es: document.getElementById(`c_desc_es_${i}`)?.value || '',
@@ -3049,11 +3043,11 @@ async function saveAll() {
     icon: document.getElementById(`s_icon_${i}`)?.value ?? siteData.services[i].icon,
     name: { es: document.getElementById(`s_name_es_${i}`)?.value||'', en: document.getElementById(`s_name_en_${i}`)?.value||'', fr: document.getElementById(`s_name_fr_${i}`)?.value||'', de: document.getElementById(`s_name_de_${i}`)?.value||'', pt: document.getElementById(`s_name_pt_${i}`)?.value||'' },
     desc: { es: document.getElementById(`s_desc_es_${i}`)?.value||'', en: document.getElementById(`s_desc_en_${i}`)?.value||'', fr: document.getElementById(`s_desc_fr_${i}`)?.value||'', de: document.getElementById(`s_desc_de_${i}`)?.value||'', pt: document.getElementById(`s_desc_pt_${i}`)?.value||'' },
-    items: { es: (document.getElementById(`s_items_es_${i}`)?.value||'').split('\n').filter(f=>f.trim()), en: (document.getElementById(`s_items_en_${i}`)?.value||'').split('\n').filter(f=>f.trim()), fr: (document.getElementById(`s_items_fr_${i}`)?.value||'').split('\n').filter(f=>f.trim()), de: (document.getElementById(`s_items_de_${i}`)?.value||'').split('\n').filter(f=>f.trim()), pt: (document.getElementById(`s_items_pt_${i}`)?.value||'').split('\n').filter(f=>f.trim()) }
+    items: { es: (document.getElementById(`s_items_es_${i}`)?.value||'').split('\n').filter(f=>f.trim()), en: (document.getElementById(`s_items_en_${i}`)?.value||'').split('\n').filter(f=>f.trim()), fr: (document.getElementById(`s_items_fr_${i}`)?.value||'').split('\n').filter(f=>f.trim()), de: (document.getElementById(`s_items_de_${i}`)?.value||'').split('\n').filter(f=>f.trim()), pt: (document.getElementById(`s_items_pt_${i}`)?.value||'').split('\n').filter(f=>f.trim()), ca: (document.getElementById(`s_items_ca_${i}`)?.value||'').split('\n').filter(f=>f.trim()), ar: (document.getElementById(`s_items_ar_${i}`)?.value||'').split('\n').filter(f=>f.trim()) }
   }));
 
   // Gallery
-  siteData.gallery = siteData.gallery.map((_,i) => document.getElementById(`g_url_${i}`).value.trim());
+  siteData.gallery = siteData.gallery.map((_,i) => document.getElementById(`g_url_${i}`)?.value?.trim() || '').filter(Boolean);
 
   localStorage.setItem('acv_data', JSON.stringify(siteData)); // local backup
   renderAll();
