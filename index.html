@@ -749,7 +749,35 @@
   }
   .btn-add-block:hover { border-color:var(--accent); color:var(--accent-light); }
 
-/* ── FLOATING BUTTONS ── */
+
+  /* ── SEQUENCES ── */
+  .seq-block { max-width:1100px; margin:0 auto 3rem; }
+  .seq-title { font-family:var(--font-display); font-size:clamp(1.8rem,3.5vw,2.8rem); font-weight:700; margin-bottom:.6rem; }
+  .seq-subtitle { font-family:var(--font-display); font-size:clamp(1.1rem,2vw,1.5rem); font-weight:400; color:var(--text-muted); margin-bottom:.8rem; }
+  .seq-text { color:var(--text-muted); font-size:1rem; line-height:1.8; margin-bottom:1rem; max-width:700px; }
+  .seq-media-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:1rem; margin-top:1rem; }
+  .seq-media-img { width:100%; aspect-ratio:4/3; object-fit:cover; border-radius:4px; }
+  .seq-video-wrap { aspect-ratio:16/9; }
+  .seq-video-wrap iframe { width:100%; height:100%; border:none; border-radius:4px; }
+  .seq-admin-card { background:var(--charcoal); border:1px solid rgba(255,255,255,.08); border-radius:4px; padding:1.2rem; margin-bottom:1rem; }
+  .seq-admin-header { display:flex; align-items:center; gap:.8rem; margin-bottom:1rem; }
+  .seq-admin-num { background:var(--accent); color:white; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.75rem; font-weight:600; flex-shrink:0; }
+  .seq-drag-handle { cursor:grab; color:var(--text-muted); font-size:1rem; }
+  .seq-del-btn { background:none; border:none; color:rgba(255,80,80,.5); cursor:pointer; margin-left:auto; font-size:.85rem; transition:color .2s; }
+  .seq-del-btn:hover { color:#ff5050; }
+  .seq-order-row { display:flex; gap:.4rem; flex-wrap:wrap; margin-bottom:.8rem; font-size:.72rem; align-items:center; }
+  .seq-order-label { color:var(--text-muted); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; }
+  .seq-order-chip { background:var(--dark); border:1px solid rgba(255,255,255,.1); color:var(--sand); padding:.2rem .6rem; border-radius:3px; cursor:grab; user-select:none; transition:all .2s; }
+  .seq-order-chip.drag-over { border-color:var(--accent); background:rgba(196,131,58,.2); }
+  .seq-photos-preview { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.5rem; }
+  .seq-photo-thumb { position:relative; width:70px; height:55px; }
+  .seq-photo-thumb img { width:100%; height:100%; object-fit:cover; border-radius:3px; }
+  .seq-photo-del { position:absolute; top:-5px; right:-5px; background:#ff5050; border:none; color:white; width:16px; height:16px; border-radius:50%; font-size:.6rem; cursor:pointer; display:flex; align-items:center; justify-content:center; line-height:1; }
+  .btn-add-seq { background:rgba(196,131,58,.1); border:2px dashed var(--accent); color:var(--accent-light); width:100%; padding:.8rem; border-radius:4px; cursor:pointer; font-family:var(--font-body); font-size:.85rem; font-weight:500; margin-top:.5rem; transition:all .2s; }
+  .btn-add-seq:hover { background:rgba(196,131,58,.2); }
+
+
+  /* ── FLOATING BUTTONS ── */
   .float-stack {
     position: fixed; bottom: 1.5rem; right: 1.2rem; z-index: 90;
     display: flex; flex-direction: column; gap: .5rem; align-items: flex-end;
@@ -868,42 +896,18 @@
 </section>
 
 <!-- ALQUILER -->
-<section id="alquiler">
-  <div class="rental-header reveal">
-    <div class="section-tag" data-i18n="rental_tag">🚐 Flota</div>
-    <h2 class="section-title" data-i18n="rental_title">Campervans en alquiler</h2>
-    <p class="section-lead" data-i18n="rental_lead">Elige tu campervan y escríbenos para consultar disponibilidad. Sin intermediarios.</p>
-  </div>
-  <div class="rental-grid" id="rentalGrid">
-    <!-- Rendered by JS -->
-  </div>
+<section id="alquiler" style="padding:6rem 4vw;background:var(--white)">
+  <div id="seq-alquiler"></div>
 </section>
 
 <!-- SERVICIOS -->
-<section id="servicios">
-  <div class="services-inner">
-    <div class="services-header reveal">
-      <div class="section-tag" data-i18n="services_tag">🔧 Lo que hacemos</div>
-      <h2 class="section-title" data-i18n="services_title">Nuestros servicios</h2>
-      <p class="section-lead" data-i18n="services_lead">Más de 10 años transformando furgonetas en hogares sobre ruedas.</p>
-    </div>
-    <div class="services-grid" id="servicesGrid">
-      <!-- Rendered by JS -->
-    </div>
-  </div>
+<section id="servicios" style="padding:6rem 4vw;background:var(--dark)">
+  <div id="seq-servicios" style="color:var(--cream)"></div>
 </section>
 
 <!-- GALERÍA -->
-<section id="galeria">
-  <div class="galeria-inner">
-    <div class="galeria-header reveal">
-      <div class="section-tag" data-i18n="gallery_tag">📸 Galería</div>
-      <h2 class="section-title" data-i18n="gallery_title">Nuestro trabajo</h2>
-    </div>
-    <div class="gallery-grid" id="galleryGrid">
-      <!-- Rendered by JS -->
-    </div>
-  </div>
+<section id="galeria" style="padding:6rem 4vw;background:var(--cream)">
+  <div id="seq-galeria"></div>
 </section>
 
 <!-- CONTACTO -->
@@ -998,10 +1002,10 @@
     </div>
 
     <div class="admin-tabs" id="adminTabs">
-      <button class="admin-tab active" onclick="switchTab('tab-contact')">Contacto</button>
-      <button class="admin-tab" onclick="switchTab('tab-campers')">Campervans</button>
-      <button class="admin-tab" onclick="switchTab('tab-services')">Servicios</button>
-      <button class="admin-tab" onclick="switchTab('tab-gallery')">Galería</button>
+      <button class="admin-tab active" onclick="switchTab('tab-contact')" id="admtab-contact">Contacto</button>
+      <button class="admin-tab" onclick="switchTab('tab-campers')" id="admtab-alquiler">Campervans</button>
+      <button class="admin-tab" onclick="switchTab('tab-services')" id="admtab-servicios">Servicios</button>
+      <button class="admin-tab" onclick="switchTab('tab-gallery')" id="admtab-galeria">Galería</button>
       <button class="admin-tab" id="tab-design-btn" onclick="switchTab('tab-design')" style="display:none;background:rgba(196,131,58,.15);border-color:rgba(196,131,58,.4);color:var(--accent-light)">🎨 Diseño</button>
       <button class="admin-tab" id="tab-sections-btn" onclick="switchTab('tab-sections')" style="display:none;background:rgba(111,207,151,.1);border-color:rgba(111,207,151,.3);color:#6fcf97">📐 Secciones</button>
       <button class="admin-tab" id="tab-texts-btn" onclick="switchTab('tab-texts')" style="display:none;background:rgba(168,216,234,.1);border-color:rgba(168,216,234,.3);color:#a8d8ea">✏️ Textos</button>
@@ -1029,2177 +1033,240 @@
       <span class="save-msg" id="saveMsg1">✓ Guardado</span>
     </div>
 
-    <!-- TAB: CAMPERVANS -->
+    <!-- TAB: ALQUILER (sequences) -->
     <div class="admin-section" id="tab-campers">
-      <h3>Campervans en alquiler</h3>
-      <p style="color:var(--sand);font-size:.82rem;margin-bottom:1rem">✏️ Escribí en español y usá el botón <strong style="color:var(--accent-light)">Traducir</strong> para generar los otros idiomas automáticamente.</p>
-      <div id="campersAdmin"></div>
-      <button class="btn-add-camper" onclick="addCamper()">+ Agregar campervan</button>
+      <div id="seq-editor-alquiler"></div>
+      <button class="btn-add-seq" onclick="addSeq('alquiler')">+ Agregar secuencia</button>
       <br>
-      <div style="display:flex;gap:.8rem;align-items:center;margin-top:1.5rem;flex-wrap:wrap">
-        <button class="btn-translate" onclick="translateAll()">🌐 Traducir automáticamente</button>
-        <span class="translate-msg" id="translateMsg"></span>
-      </div>
-      <button class="btn-save-all" style="margin-top:1rem" onclick="saveAll()">Guardar cambios</button>
-      <span class="save-msg" id="saveMsg2">✓ Guardado</span>
-    </div>
-
-    <!-- TAB: SERVICIOS -->
-    <div class="admin-section" id="tab-services">
-      <h3>Textos de servicios</h3>
-      <p style="color:var(--sand);font-size:.82rem;margin-bottom:1rem">✏️ Escribí en español y usá el botón <strong style="color:var(--accent-light)">Traducir</strong> para generar los otros idiomas automáticamente.</p>
-      <div id="servicesAdmin"></div>
       <div style="display:flex;gap:.8rem;align-items:center;margin-top:1rem;flex-wrap:wrap">
-        <button class="btn-translate" onclick="translateAll()">🌐 Traducir automáticamente</button>
-        <span class="translate-msg" id="translateMsg2"></span>
+        <button class="btn-translate" onclick="translateSeqs('alquiler')">🌐 Traducir automáticamente</button>
+        <span class="translate-msg" id="translateMsgAlquiler"></span>
       </div>
-      <button class="btn-save-all" style="margin-top:1rem" onclick="saveAll()">Guardar cambios</button>
-      <span class="save-msg" id="saveMsg3">✓ Guardado</span>
+      <button class="btn-save-all" style="margin-top:1rem" onclick="saveSeqs('alquiler')">Guardar cambios</button>
+      <span class="save-msg" id="saveMsg-alquiler">✓ Guardado</span>
     </div>
 
-
-
-    <!-- TAB: TEXTOS (solo admin) -->
-    <div class="admin-section" id="tab-texts">
-      <h3>✏️ Textos del sitio</h3>
-      <p style="color:var(--sand);font-size:.82rem;margin-bottom:1.5rem">Editá en español y usá "Traducir" para generar todos los idiomas.</p>
-
-      <div class="admin-card">
-        <h4>🏢 Empresa</h4>
-        <div class="form-group">
-          <label>Nombre de la empresa</label>
-          <input type="text" id="txt_companyName" placeholder="Ancarvancamper">
-        </div>
-        <div class="form-group">
-          <label>URL de Instagram</label>
-          <input type="text" id="txt_instagramUrl" placeholder="https://www.instagram.com/...">
-        </div>
-        <div class="form-group">
-          <label>URL de Firebase (base de datos)</label>
-          <input type="text" id="txt_fbUrl" placeholder="https://proyecto-default-rtdb.firebaseio.com">
-          <div style="font-size:.72rem;color:var(--text-muted);margin-top:.3rem">⚠️ Solo cambiar al crear una nueva implementación para otro cliente</div>
-        </div>
-      </div>
-
-      <div class="admin-card">
-        <h4>🦸 Hero (pantalla principal)</h4>
-        <div class="form-group"><label>Tag (ej: Málaga · España)</label><input type="text" id="txt_hero_tag"></div>
-        <div class="form-group"><label>Título (podés usar &lt;br&gt; y &lt;em&gt;)</label><input type="text" id="txt_hero_title"></div>
-        <div class="form-group"><label>Subtítulo</label><textarea id="txt_hero_sub" rows="2"></textarea></div>
-        <div class="form-group"><label>Botón principal</label><input type="text" id="txt_hero_cta1"></div>
-        <div class="form-group"><label>Botón secundario</label><input type="text" id="txt_hero_cta2"></div>
-      </div>
-
-      <div class="admin-card">
-        <h4>🚐 Sección Alquiler</h4>
-        <div class="form-group"><label>Tag</label><input type="text" id="txt_rental_tag"></div>
-        <div class="form-group"><label>Título</label><input type="text" id="txt_rental_title"></div>
-        <div class="form-group"><label>Descripción</label><textarea id="txt_rental_lead" rows="2"></textarea></div>
-      </div>
-
-      <div class="admin-card">
-        <h4>🔧 Sección Servicios</h4>
-        <div class="form-group"><label>Tag</label><input type="text" id="txt_services_tag"></div>
-        <div class="form-group"><label>Título</label><input type="text" id="txt_services_title"></div>
-        <div class="form-group"><label>Descripción</label><textarea id="txt_services_lead" rows="2"></textarea></div>
-      </div>
-
-      <div class="admin-card">
-        <h4>📸 Sección Galería</h4>
-        <div class="form-group"><label>Tag</label><input type="text" id="txt_gallery_tag"></div>
-        <div class="form-group"><label>Título</label><input type="text" id="txt_gallery_title"></div>
-      </div>
-
-      <div class="admin-card">
-        <h4>📍 Sección Contacto</h4>
-        <div class="form-group"><label>Tag</label><input type="text" id="txt_contact_tag"></div>
-        <div class="form-group"><label>Título</label><input type="text" id="txt_contact_title"></div>
-        <div class="form-group"><label>Descripción</label><textarea id="txt_contact_lead" rows="2"></textarea></div>
-      </div>
-
-
-
-      <div style="display:flex;gap:.8rem;flex-wrap:wrap;margin-top:1rem;align-items:center">
-        <button class="btn-translate" onclick="translateTexts()">🌐 Traducir automáticamente</button>
-        <span class="translate-msg" id="translateMsgTexts"></span>
-      </div>
-      <button class="btn-save-all" style="margin-top:1rem" onclick="saveTexts()">Guardar textos</button>
-      <span class="save-msg" id="saveMsg7">✓ Guardado</span>
-    </div>
-
-    <!-- TAB: DISEÑO (solo admin) -->
-    <div class="admin-section" id="tab-design">
-      <h3>🎨 Diseño del sitio</h3>
-      <p style="color:var(--sand);font-size:.82rem;margin-bottom:1.5rem">Los cambios se aplican a todos los visitantes al guardar.</p>
-
-      <!-- LOGO -->
-      <div class="admin-card">
-        <h4>Logo del sitio</h4>
-        <div class="logo-upload-box" onclick="document.getElementById('logoFileInput').click()">
-          <input type="file" id="logoFileInput" accept="image/*" style="display:none" onchange="handleLogoUpload(this)">
-          <div style="color:var(--accent-light);font-size:.85rem">🖼️ Tocar para subir nuevo logo</div>
-          <div style="color:var(--text-muted);font-size:.75rem;margin-top:.3rem">El logo se usará en el nav y como favicon</div>
-        </div>
-        <img id="logoPreviewImg" class="logo-preview-img" src="" style="display:none">
-      </div>
-
-      <!-- COLORES -->
-      <div class="admin-card">
-        <h4>Paleta de colores</h4>
-        <div class="color-grid">
-          <div class="color-field">
-            <label>Color de fondo (página)</label>
-            <div class="color-row">
-              <input type="color" id="clr_cream" value="#F5F0E8" oninput="syncColorText('cream')">
-              <input type="text" id="clr_cream_txt" value="#F5F0E8" oninput="syncColorPicker('cream')" maxlength="7">
-            </div>
-          </div>
-          <div class="color-field">
-            <label>Color de acento</label>
-            <div class="color-row">
-              <input type="color" id="clr_accent" value="#C4833A" oninput="syncColorText('accent')">
-              <input type="text" id="clr_accent_txt" value="#C4833A" oninput="syncColorPicker('accent')" maxlength="7">
-            </div>
-          </div>
-          <div class="color-field">
-            <label>Color oscuro (hero/footer)</label>
-            <div class="color-row">
-              <input type="color" id="clr_dark" value="#1A1A18" oninput="syncColorText('dark')">
-              <input type="text" id="clr_dark_txt" value="#1A1A18" oninput="syncColorPicker('dark')" maxlength="7">
-            </div>
-          </div>
-          <div class="color-field">
-            <label>Color de texto secundario</label>
-            <div class="color-row">
-              <input type="color" id="clr_text" value="#6B6560" oninput="syncColorText('text')">
-              <input type="text" id="clr_text_txt" value="#6B6560" oninput="syncColorPicker('text')" maxlength="7">
-            </div>
-          </div>
-          <div class="color-field">
-            <label>Fondo del nav (cabezal)</label>
-            <div class="color-row">
-              <input type="color" id="clr_nav" value="#F5F0E8" oninput="syncColorText('nav')">
-              <input type="text" id="clr_nav_txt" value="#F5F0E8" oninput="syncColorPicker('nav')" maxlength="7">
-            </div>
-          </div>
-          <div class="color-field">
-            <label>Texto del nav</label>
-            <div class="color-row">
-              <input type="color" id="clr_navtext" value="#1A1A18" oninput="syncColorText('navtext')">
-              <input type="text" id="clr_navtext_txt" value="#1A1A18" oninput="syncColorPicker('navtext')" maxlength="7">
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- TIPOGRAFÍA -->
-      <div class="admin-card">
-        <h4>Tipografía</h4>
-        <label style="color:var(--sand);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase">Combinación de fuentes</label>
-        <select class="font-select" id="fontCombo">
-          <option value="playfair-jost">Playfair + Jost (actual — elegante)</option>
-          <option value="merriweather-open">Merriweather + Open Sans (clásico)</option>
-          <option value="montserrat-montserrat">Montserrat (moderno y limpio)</option>
-          <option value="raleway-lato">Raleway + Lato (minimalista)</option>
-          <option value="lora-source">Lora + Source Sans (editorial)</option>
-          <option value="oswald-roboto">Oswald + Roboto (impactante)</option>
-        </select>
-      </div>
-
-      <!-- ESTILO DE TARJETAS -->
-      <div class="admin-card">
-        <h4>Estilo de tarjetas y bordes</h4>
-        <div style="color:var(--sand);font-size:.75rem;margin-bottom:.4rem">Radio de bordes</div>
-        <div class="style-options">
-          <button class="style-opt active" onclick="setStyleOpt(this,'radius','0px')">Recto</button>
-          <button class="style-opt" onclick="setStyleOpt(this,'radius','4px')">Suave</button>
-          <button class="style-opt" onclick="setStyleOpt(this,'radius','12px')">Redondeado</button>
-          <button class="style-opt" onclick="setStyleOpt(this,'radius','20px')">Muy redondeado</button>
-        </div>
-        <div style="color:var(--sand);font-size:.75rem;margin:.8rem 0 .4rem">Sombras</div>
-        <div class="style-options">
-          <button class="style-opt active" onclick="setStyleOpt(this,'shadow','none')">Sin sombra</button>
-          <button class="style-opt" onclick="setStyleOpt(this,'shadow','soft')">Suave</button>
-          <button class="style-opt" onclick="setStyleOpt(this,'shadow','strong')">Fuerte</button>
-        </div>
-      </div>
-
-      <!-- ACCIONES -->
-      <div style="display:flex;gap:.8rem;flex-wrap:wrap;margin-top:1rem;align-items:center">
-        <button class="btn-apply" style="background:var(--charcoal);border:1px solid var(--accent)" onclick="previewDesign()" id="btnPreview">👁️ Previsualizar</button>
-        <button class="btn-apply" onclick="applyAndSaveDesign()" id="btnSaveDesign">💾 Guardar</button>
-        <button class="btn-restore" id="btnDiscardDesign" style="display:none" onclick="discardDesign()">✕ Descartar</button>
-        <button class="btn-restore" onclick="restoreDefaultDesign()">↩️ Restaurar original</button>
-      </div>
-      <div id="previewBanner" style="display:none;background:rgba(196,131,58,.15);border:1px solid var(--accent);border-radius:3px;padding:.6rem 1rem;margin-top:.8rem;font-size:.82rem;color:var(--accent-light)">
-        👁️ <strong>Modo previsualización</strong> — Los cambios no están guardados aún. Tocá <strong>Guardar</strong> para confirmar o <strong>Descartar</strong> para volver atrás.
-      </div>
-      <span class="save-msg" id="saveMsg5">✓ Diseño guardado</span>
-    </div>
-
-
-    <!-- TAB: SECCIONES (solo admin) -->
-    <div class="admin-section" id="tab-sections">
-      <h3>📐 Gestión de secciones</h3>
-      <p style="color:var(--sand);font-size:.82rem;margin-bottom:1.5rem">Arrastrá para reordenar · ✏️ para renombrar · + para agregar</p>
-      <div id="sectionsList"></div>
-      <span class="save-msg" id="saveMsg6">✓ Guardado</span>
-    </div>
-
-    <!-- TAB: GALERÍA -->
-    <div class="admin-section" id="tab-gallery">
-      <h3>Imágenes de galería</h3>
-      <p style="color:var(--sand);font-size:.85rem;margin-bottom:1.5rem">Pega URLs de imágenes (Imgur, Cloudinary, etc.)</p>
-      <div id="galleryAdmin"></div>
-      <button class="btn-add-camper" onclick="addGalleryImg()">+ Agregar imagen</button>
+    <!-- TAB: SERVICIOS (sequences) -->
+    <div class="admin-section" id="tab-services">
+      <div id="seq-editor-servicios"></div>
+      <button class="btn-add-seq" onclick="addSeq('servicios')">+ Agregar secuencia</button>
       <br>
-      <button class="btn-save-all" style="margin-top:1.5rem" onclick="saveAll()">Guardar cambios</button>
-      <span class="save-msg" id="saveMsg4">✓ Guardado</span>
+      <div style="display:flex;gap:.8rem;align-items:center;margin-top:1rem;flex-wrap:wrap">
+        <button class="btn-translate" onclick="translateSeqs('servicios')">🌐 Traducir automáticamente</button>
+        <span class="translate-msg" id="translateMsgServicios"></span>
+      </div>
+      <button class="btn-save-all" style="margin-top:1rem" onclick="saveSeqs('servicios')">Guardar cambios</button>
+      <span class="save-msg" id="saveMsg-servicios">✓ Guardado</span>
     </div>
-  </div>
-</div>
 
-<script>
-
-function toggleLangMenu() {
-  document.getElementById('langDropdown').classList.toggle('open');
-}
-// Close dropdown on outside click
-document.addEventListener('click', e => {
-  const dd = document.getElementById('langDropdown');
-  if (dd && !dd.contains(e.target)) dd.classList.remove('open');
-});
+    <!-- TAB: GALERÍA (sequences) -->
+    <div class="admin-section" id="tab-gallery">
+      <div id="seq-editor-galeria"></div>
+      <button class="btn-add-seq" onclick="addSeq('galeria')">+ Agregar secuencia</button>
+      <br>
+      <div style="display:flex;gap:.8rem;align-items:center;margin-top:1rem;flex-wrap:wrap">
+        <button class="btn-translate" onclick="translateSeqs('galeria')">🌐 Traducir automáticamente</button>
+        <span class="translate-msg" id="translateMsgGaleria"></span>
+      </div>
+      <button class="btn-save-all" style="margin-top:1rem" onclick="saveSeqs('galeria')">Guardar cambios</button>
+      <span class="save-msg" id="saveMsg-galeria">✓ Guardado</span>
+    </div>
 
 
 // ══════════════════════════════════════════════
-//  PWA INSTALL PROMPT
+//  SEQUENCE ADMIN
 // ══════════════════════════════════════════════
-let deferredPrompt = null;
+const SEQ_ELEMENT_LABELS = { title:'Título', subtitle:'Subtítulo', text:'Texto', photos:'Fotos', videos:'Videos' };
 
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  // Show nav install button
-  const navBtn = document.getElementById('navInstallBtn');
-  if (navBtn) navBtn.style.display = 'inline-flex';
-  // Only show banner if user hasn't dismissed before
-  if (!localStorage.getItem('pwa_dismissed')) {
-    const logoEl = document.getElementById('pwaBannerLogo');
-    const navLogo = document.querySelector('.nav-logo img');
-    if (logoEl && navLogo) logoEl.src = navLogo.src;
-    setTimeout(() => {
-      const banner = document.getElementById('pwa-banner');
-      if (banner) banner.classList.remove('hidden');
-    }, 3000);
-  }
-});
-
-function triggerInstall() {
-  if (deferredPrompt) {
-    // Android/Chrome: show native prompt
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(({ outcome }) => {
-      deferredPrompt = null;
-      if (outcome === 'accepted') {
-        localStorage.setItem('pwa_dismissed', '1');
-        const navBtn = document.getElementById('navInstallBtn');
-        if (navBtn) navBtn.style.display = 'none';
-      }
-    });
-  } else {
-    // iOS/Safari: show manual instructions
-    const modal = document.getElementById('ios-modal');
-    if (modal) modal.style.display = 'flex';
-  }
+function buildSeqEditor(sectionId) {
+  const container = document.getElementById('seq-editor-' + sectionId);
+  if (!container) return;
+  const seqs = getSeqs(sectionId);
+  if (!seqs.length) { container.innerHTML = '<p style="color:var(--text-muted);font-size:.85rem;margin-bottom:1rem">Sin secuencias. Agregá una abajo.</p>'; return; }
+  container.innerHTML = seqs.map((seq, si) => buildSeqAdminCard(sectionId, seq, si)).join('');
+  initSeqDrag(sectionId);
+  initOrderDrag(sectionId);
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const installBtn = document.getElementById('pwaInstallBtn');
-  const dismissBtn = document.getElementById('pwaDismissBtn');
-  const banner = document.getElementById('pwa-banner');
+function buildSeqAdminCard(sectionId, seq, si) {
+  const order = seq.order || ['title','subtitle','text','photos','videos'];
+  const orderChips = order.map(el =>
+    '<span class="seq-order-chip" data-el="' + el + '" draggable="true">' + SEQ_ELEMENT_LABELS[el] + '</span>'
+  ).join('');
+  const photosPreview = (seq.photos||[]).map((url,pi) =>
+    '<div class="seq-photo-thumb"><img src="' + url + '"><button class="seq-photo-del" onclick="delSeqPhoto(\'' + sectionId + '\',' + si + ',' + pi + ')">✕</button></div>'
+  ).join('');
+  const videosList = (seq.videos||[]).map((url,vi) =>
+    '<div style="display:flex;gap:.4rem;align-items:center;margin-bottom:.3rem">' +
+    '<input type="text" id="vid_' + sectionId + '_' + si + '_' + vi + '" value="' + url + '" style="flex:1;background:var(--dark);border:1px solid rgba(255,255,255,.1);color:var(--cream);padding:.35rem .6rem;border-radius:3px;font-family:var(--font-body);font-size:.82rem">' +
+    '<button onclick="delSeqVideo(\'' + sectionId + '\',' + si + ',' + vi + ')" style="background:none;border:none;color:#ff7070;cursor:pointer">✕</button></div>'
+  ).join('');
 
-  if (installBtn) {
-    installBtn.addEventListener('click', async () => {
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      deferredPrompt = null;
-      banner.classList.add('hidden');
-      if (outcome === 'accepted') localStorage.setItem('pwa_dismissed', '1');
-    });
+  return '<div class="seq-admin-card" data-si="' + si + '" data-section="' + sectionId + '" draggable="true">' +
+    '<div class="seq-admin-header">' +
+      '<span class="seq-drag-handle">⠿</span>' +
+      '<span class="seq-admin-num">' + (si+1) + '</span>' +
+      '<span style="color:var(--sand);font-size:.85rem">Secuencia ' + (si+1) + '</span>' +
+      '<button class="seq-del-btn" onclick="delSeq(\'' + sectionId + '\',' + si + ')">🗑️ Eliminar</button>' +
+    '</div>' +
+    '<div class="seq-order-row">' +
+      '<span class="seq-order-label">Orden:</span>' + orderChips +
+    '</div>' +
+    '<div class="form-group"><label>Título (español)</label>' +
+    '<input type="text" id="seq_title_' + sectionId + '_' + si + '" value="' + (seq.title&&seq.title.es||'') + '" placeholder="Título..."></div>' +
+    '<div class="form-group"><label>Subtítulo (español)</label>' +
+    '<input type="text" id="seq_sub_' + sectionId + '_' + si + '" value="' + (seq.subtitle&&seq.subtitle.es||'') + '" placeholder="Subtítulo..."></div>' +
+    '<div class="form-group"><label>Texto (español)</label>' +
+    '<textarea id="seq_text_' + sectionId + '_' + si + '" rows="3" placeholder="Descripción...">' + (seq.text&&seq.text.es||'') + '</textarea></div>' +
+    '<div class="form-group"><label>Fotos</label>' +
+    '<div class="upload-area" onclick="document.getElementById(\'seqphoto_' + sectionId + '_' + si + '\').click()" style="margin-bottom:.5rem">' +
+    '<input type="file" id="seqphoto_' + sectionId + '_' + si + '" accept="image/*" multiple style="display:none" onchange="handleSeqPhotos(this,\'' + sectionId + '\',' + si + ')">' +
+    '<label style="cursor:pointer;color:var(--accent-light);font-size:.82rem">📷 Agregar fotos desde el celular</label></div>' +
+    '<div class="seq-photos-preview" id="seqphotos_' + sectionId + '_' + si + '">' + photosPreview + '</div></div>' +
+    '<div class="form-group"><label>Videos YouTube (uno por campo)</label>' +
+    videosList +
+    '<button onclick="addSeqVideo(\'' + sectionId + '\',' + si + ')" style="background:none;border:1px dashed rgba(255,255,255,.2);color:var(--text-muted);padding:.3rem .8rem;border-radius:3px;cursor:pointer;font-size:.78rem;font-family:var(--font-body);margin-top:.3rem">+ Agregar video</button></div>' +
+  '</div>';
+}
+
+function addSeq(sectionId) {
+  if (!siteData.sections) siteData.sections = {};
+  if (!siteData.sections[sectionId]) siteData.sections[sectionId] = [];
+  siteData.sections[sectionId].push(newSeq());
+  buildSeqEditor(sectionId);
+}
+
+function delSeq(sectionId, si) {
+  if (!confirm('¿Eliminar esta secuencia?')) return;
+  siteData.sections[sectionId].splice(si, 1);
+  buildSeqEditor(sectionId);
+}
+
+function addSeqVideo(sectionId, si) {
+  siteData.sections[sectionId][si].videos.push('');
+  buildSeqEditor(sectionId);
+}
+
+function delSeqVideo(sectionId, si, vi) {
+  siteData.sections[sectionId][si].videos.splice(vi, 1);
+  buildSeqEditor(sectionId);
+}
+
+async function handleSeqPhotos(input, sectionId, si) {
+  const files = Array.from(input.files);
+  for (const file of files) {
+    const b64 = await fileToBase64(file);
+    siteData.sections[sectionId][si].photos.push(b64);
   }
+  buildSeqEditor(sectionId);
+}
 
-  if (dismissBtn) {
-    dismissBtn.addEventListener('click', () => {
-      banner.classList.add('hidden');
-      localStorage.setItem('pwa_dismissed', '1');
-    });
-  }
-});
+function delSeqPhoto(sectionId, si, pi) {
+  siteData.sections[sectionId][si].photos.splice(pi, 1);
+  buildSeqEditor(sectionId);
+}
 
-// Hide banner if already installed
-window.addEventListener('appinstalled', () => {
-  const banner = document.getElementById('pwa-banner');
-  if (banner) banner.classList.add('hidden');
-  const navBtn = document.getElementById('navInstallBtn');
-  if (navBtn) navBtn.style.display = 'none';
-  localStorage.setItem('pwa_dismissed', '1');
-});
-
-
-
-
-
-// ══════════════════════════════════════════════
-//  TEXTS MANAGEMENT
-// ══════════════════════════════════════════════
-const TEXT_KEYS = ['hero_tag','hero_title','hero_sub','hero_cta1','hero_cta2',
-  'rental_tag','rental_title','rental_lead',
-  'services_tag','services_title','services_lead',
-  'gallery_tag','gallery_title',
-  'contact_tag','contact_title','contact_lead'];
-// Nav names are managed exclusively from the Secciones tab
-
-function buildTextsTab() {
-  // Populate from siteData
-  const esTexts = (siteData.texts && siteData.texts.es) || {};
-  TEXT_KEYS.forEach(k => {
-    const el = document.getElementById('txt_' + k);
-    if (el) el.value = esTexts[k] || i18n.es[k] || '';
+function readSeqFromForm(sectionId) {
+  const seqs = getSeqs(sectionId);
+  seqs.forEach((seq, si) => {
+    const tEl = document.getElementById('seq_title_' + sectionId + '_' + si);
+    const sEl = document.getElementById('seq_sub_'   + sectionId + '_' + si);
+    const xEl = document.getElementById('seq_text_'  + sectionId + '_' + si);
+    if (tEl) { if (!seq.title)    seq.title    = {}; seq.title.es    = tEl.value; }
+    if (sEl) { if (!seq.subtitle) seq.subtitle = {}; seq.subtitle.es = sEl.value; }
+    if (xEl) { if (!seq.text)     seq.text     = {}; seq.text.es     = xEl.value; }
+    // Read videos
+    seq.videos = (seq.videos||[]).map((_, vi) => {
+      const vEl = document.getElementById('vid_' + sectionId + '_' + si + '_' + vi);
+      return vEl ? vEl.value.trim() : '';
+    }).filter(Boolean);
+    // Read order from chips
+    const card = document.querySelector('.seq-admin-card[data-si="' + si + '"][data-section="' + sectionId + '"]');
+    if (card) {
+      const chips = card.querySelectorAll('.seq-order-chip');
+      seq.order = Array.from(chips).map(c => c.dataset.el);
+    }
   });
-  // Company fields
-  const fields = ['companyName','instagramUrl','fbUrl'];
-  fields.forEach(f => {
-    const el = document.getElementById('txt_' + f);
-    if (el) el.value = siteData[f] || defaultData[f] || '';
-  });
 }
 
-async function translateTexts() {
+async function translateSeqs(sectionId) {
   const langs = ['en','fr','de','pt','ca','ar'];
-  const msgEl = document.getElementById('translateMsgTexts');
+  const msgEl = document.getElementById('translateMsg' + sectionId.charAt(0).toUpperCase() + sectionId.slice(1));
   if (msgEl) { msgEl.textContent = 'Traduciendo...'; msgEl.className = 'translate-msg'; }
+  readSeqFromForm(sectionId);
   try {
-    if (!siteData.texts) siteData.texts = { es: {} };
-    // Read ES values from form
-    TEXT_KEYS.forEach(k => {
-      const el = document.getElementById('txt_' + k);
-      if (el) { if (!siteData.texts.es) siteData.texts.es = {}; siteData.texts.es[k] = el.value; }
-    });
-    // Translate each key to each lang
-    for (const l of langs) {
-      if (!siteData.texts[l]) siteData.texts[l] = {};
-      for (const k of TEXT_KEYS) {
-        const esVal = siteData.texts.es[k] || '';
-        if (esVal) siteData.texts[l][k] = await translateText(esVal, l);
+    const seqs = getSeqs(sectionId);
+    for (const seq of seqs) {
+      for (const l of langs) {
+        if (seq.title?.es)    { if(!seq.title[l])    seq.title[l]    = await translateText(seq.title.es, l); }
+        if (seq.subtitle?.es) { if(!seq.subtitle[l]) seq.subtitle[l] = await translateText(seq.subtitle.es, l); }
+        if (seq.text?.es)     { if(!seq.text[l])     seq.text[l]     = await translateText(seq.text.es, l); }
       }
     }
-    if (msgEl) { msgEl.textContent = '✓ Traducción completa'; msgEl.className = 'translate-msg ok'; }
-    setTimeout(() => { if (msgEl) { msgEl.textContent = ''; msgEl.className = 'translate-msg'; } }, 3000);
+    if (msgEl) { msgEl.textContent = '✓ Traducción completa'; msgEl.className = 'translate-msg ok'; setTimeout(() => { if(msgEl) { msgEl.textContent=''; msgEl.className='translate-msg'; } }, 3000); }
   } catch(e) {
     if (msgEl) { msgEl.textContent = '✗ Error: ' + e.message; msgEl.className = 'translate-msg err'; }
   }
 }
 
-async function saveTexts() {
-  if (!siteData.texts) siteData.texts = { es: {} };
-  if (!siteData.texts.es) siteData.texts.es = {};
-
-  // Read from form
-  TEXT_KEYS.forEach(k => {
-    const el = document.getElementById('txt_' + k);
-    if (el) siteData.texts.es[k] = el.value;
-  });
-
-  // Company fields
-  const companyEl = document.getElementById('txt_companyName');
-  const igEl = document.getElementById('txt_instagramUrl');
-  const fbEl = document.getElementById('txt_fbUrl');
-  if (companyEl && companyEl.value) siteData.companyName = companyEl.value;
-  if (igEl && igEl.value) siteData.instagramUrl = igEl.value;
-  if (fbEl && fbEl.value) { siteData.fbUrl = fbEl.value; FB_URL = fbEl.value; }
-
-  // Merge into i18n
-  mergeTextsIntoI18n();
-
-  // Update page
-  renderAll();
-
+async function saveSeqs(sectionId) {
+  readSeqFromForm(sectionId);
+  renderFixedSections();
   try {
-    showDiag('Guardando textos...');
-    await fbPut('/texts', siteData.texts);
-    await fbPut('/contact', { wa: siteData.wa, email: siteData.email, address: siteData.address, mapsUrl: siteData.mapsUrl });
-    await fbPut('/config', { companyName: siteData.companyName, instagramUrl: siteData.instagramUrl, fbUrl: siteData.fbUrl });
-    const msg = document.getElementById('saveMsg7');
+    showDiag('Guardando ' + sectionId + '...');
+    await fbPut('/sections/' + sectionId, siteData.sections[sectionId]);
+    const msg = document.getElementById('saveMsg-' + sectionId);
     if (msg) { msg.classList.add('show'); setTimeout(() => msg.classList.remove('show'), 2500); }
-    showDiag('✅ Textos guardados', 'green');
+    showDiag('✅ Guardado', 'green');
   } catch(e) {
     showDiag('❌ Error: ' + e.message, 'red');
   }
 }
 
-// ══════════════════════════════════════════════
-//  SECTIONS MANAGEMENT
-// ══════════════════════════════════════════════
-const FIXED_SECTIONS = [
-  { id:'alquiler',  names:{ es:'Alquiler', en:'Rental',   fr:'Location',  de:'Vermietung', pt:'Aluguel', ca:'Lloguer', ar:'تأجير' } },
-  { id:'servicios', names:{ es:'Servicios',en:'Services', fr:'Services',  de:'Leistungen', pt:'Serviços',ca:'Serveis', ar:'الخدمات' } },
-  { id:'galeria',   names:{ es:'Galería',  en:'Gallery',  fr:'Galerie',   de:'Galerie',    pt:'Galeria', ca:'Galeria', ar:'معرض الصور' } },
-  { id:'contacto',  names:{ es:'Contacto', en:'Contact',  fr:'Contact',   de:'Kontakt',    pt:'Contato', ca:'Contacte',ar:'اتصل بنا' } },
-];
-
-function initSections() {
-  if (!siteData.customSections) siteData.customSections = [];
-  if (!siteData.sectionOrder) siteData.sectionOrder = FIXED_SECTIONS.map(s => s.id);
-  // Add any custom section IDs not yet in order
-  siteData.customSections.forEach(s => {
-    if (!siteData.sectionOrder.includes(s.id)) siteData.sectionOrder.push(s.id);
-  });
-}
-
-function getAllSectionsOrdered() {
-  initSections();
-  const all = [
-    ...FIXED_SECTIONS.map(f => ({ ...f, type:'fixed' })),
-    ...siteData.customSections.map(s => ({ ...s, type:'custom' }))
-  ];
-  return siteData.sectionOrder.map(id => all.find(s => s.id === id)).filter(Boolean);
-}
-
-// ── DRAG AND DROP state ──
-let dragSrcEl = null;
-let dragSrcType = null; // 'section' or 'block:sectionId'
-
-function buildSectionsTab() {
-  initSections();
-  const container = document.getElementById('sectionsList');
-  if (!container) return;
-
-  const ordered = getAllSectionsOrdered();
-  let html = '<div id="sectionsContainer">';
-  ordered.forEach(s => {
-    const isFixed = s.type === 'fixed';
-    const name = isFixed
-      ? ((i18n[lang] && i18n[lang][{ alquiler:'nav_rental', servicios:'nav_services', galeria:'nav_gallery', contacto:'nav_contact' }[s.id]]) || s.names?.es || s.id)
-      : (s.names?.[lang] || s.names?.es || 'Sección');
-    html += `
-    <div class="section-row ${isFixed ? 'fixed' : 'custom'}" data-id="${s.id}" draggable="true">
-      <span class="drag-handle" title="Arrastrá para reordenar">⠿</span>
-      <span class="section-name-display" id="sdisp_${s.id}">${name}</span>
-      <input class="section-name-input" id="sinput_${s.id}" value="${name}" onblur="commitSectionName('${s.id}')" onkeydown="if(event.key==='Enter')this.blur()">
-      <button class="btn-edit-name" onclick="toggleEditName('${s.id}')" title="Editar nombre">✏️</button>
-      ${!isFixed ? `<button class="btn-del-section" onclick="deleteCustomSection('${s.id}')" title="Eliminar sección">🗑️</button>` : ''}
-    </div>
-    ${!isFixed ? buildCustomSectionEditor(s) : ''}`;
-  });
-  html += '</div>';
-  // Add + button
-  html += '<button class="btn-add-section" onclick="addCustomSection()" title="Agregar sección">+</button>';
-  // Save button
-  html += `<div style="margin-top:.5rem"><button class="btn-save-all" onclick="saveSections()">Guardar secciones</button> <span class="save-msg" id="saveMsg6">✓ Guardado</span></div>`;
-
-  container.innerHTML = html;
-  initSectionDrag();
-}
-
-function buildCustomSectionEditor(s) {
-  const si = siteData.customSections.findIndex(c => c.id === s.id);
-  if (si === -1) return '';
-  const sec = siteData.customSections[si];
-  let blocksHtml = '';
-  (sec.blocks || []).forEach((b, bi) => {
-    const val = b.type === 'media' ? (b.media || []).join('\n') : (b.content?.es || '');
-    const placeholder = b.type === 'title' ? 'Título...' : b.type === 'subtitle' ? 'Subtítulo...' : b.type === 'text' ? 'Descripción...' : 'Una URL por línea (foto o YouTube)';
-    const rows = b.type === 'media' ? 3 : 1;
-    blocksHtml += `
-    <div class="block-row" data-si="${si}" data-bi="${bi}" draggable="true">
-      <span class="block-drag">⠿</span>
-      <span class="block-type-label block-type-${b.type}">${b.type === 'title' ? 'TÍTULO' : b.type === 'subtitle' ? 'SUBTÍT.' : b.type === 'text' ? 'TEXTO' : 'MEDIA'}</span>
-      <textarea class="block-input" id="bval_${si}_${bi}" rows="${rows}" placeholder="${placeholder}">${val}</textarea>
-      <button class="btn-del-block" onclick="deleteBlock(${si},${bi})">✕</button>
-    </div>`;
-  });
-  return `
-  <div class="custom-section-editor" id="editor_${s.id}">
-    ${blocksHtml}
-    <div class="block-add-row">
-      <button class="btn-add-block" onclick="addBlock(${si},'title')">+ Título</button>
-      <button class="btn-add-block" onclick="addBlock(${si},'subtitle')">+ Subtítulo</button>
-      <button class="btn-add-block" onclick="addBlock(${si},'text')">+ Descripción</button>
-      <button class="btn-add-block" onclick="addBlock(${si},'media')">+ Imagen/Video</button>
-    </div>
-  </div>`;
-}
-
-function toggleEditName(id) {
-  const disp = document.getElementById('sdisp_' + id);
-  const inp = document.getElementById('sinput_' + id);
-  if (!disp || !inp) return;
-  const editing = inp.style.display === 'block';
-  if (editing) {
-    commitSectionName(id);
-  } else {
-    disp.style.display = 'none';
-    inp.style.display = 'block';
-    inp.focus();
-    inp.select();
-  }
-}
-
-function commitSectionName(id) {
-  const disp = document.getElementById('sdisp_' + id);
-  const inp = document.getElementById('sinput_' + id);
-  if (!disp || !inp) return;
-  const newName = inp.value.trim() || 'Sección';
-  disp.textContent = newName;
-  disp.style.display = '';
-  inp.style.display = 'none';
-  // Update in data
-  const fixed = FIXED_SECTIONS.find(f => f.id === id);
-  if (fixed) {
-    fixed.names.es = newName;
-    // Update i18n so setLang picks it up
-    const keyMap = { alquiler:'nav_rental', servicios:'nav_services', galeria:'nav_gallery', contacto:'nav_contact' };
-    const key = keyMap[id];
-    if (key) Object.keys(i18n).forEach(l => { if (i18n[l] && i18n[l][key]) i18n[l][key] = newName; });
-  } else {
-    const cs = siteData.customSections.find(s => s.id === id);
-    if (cs) { if (!cs.names) cs.names = {}; cs.names.es = newName; }
-  }
-  // Update nav + headings immediately
-  renderNavSections();
-  updateFixedSectionHeadings();
-}
-
-function addCustomSection() {
-  initSections();
-  const newId = 'custom_' + Date.now();
-  siteData.customSections.push({ id:newId, names:{ es:'Nueva sección', en:'New section', fr:'Nouvelle section', de:'Neuer Abschnitt', pt:'Nova seção', ca:'Nova secció', ar:'قسم جديد' }, blocks:[] });
-  siteData.sectionOrder.push(newId);
-  buildSectionsTab();
-}
-
-function deleteCustomSection(id) {
-  if (!confirm('¿Eliminar esta sección?')) return;
-  siteData.customSections = siteData.customSections.filter(s => s.id !== id);
-  siteData.sectionOrder = siteData.sectionOrder.filter(o => o !== id);
-  buildSectionsTab();
-  renderCustomSections();
-}
-
-function addBlock(si, type) {
-  const block = type === 'media' ? { type, media:[] } : { type, content:{ es:'', en:'', fr:'', de:'', pt:'', ca:'', ar:'' } };
-  siteData.customSections[si].blocks.push(block);
-  buildSectionsTab();
-}
-
-function deleteBlock(si, bi) {
-  siteData.customSections[si].blocks.splice(bi, 1);
-  buildSectionsTab();
-}
-
-// ── DRAG AND DROP ──
-function initSectionDrag() {
-  const rows = document.querySelectorAll('.section-row[draggable]');
-  rows.forEach(row => {
-    row.addEventListener('dragstart', e => {
-      dragSrcEl = row;
-      dragSrcType = 'section';
-      e.dataTransfer.effectAllowed = 'move';
-      setTimeout(() => row.style.opacity = '.4', 0);
-    });
-    row.addEventListener('dragend', () => { row.style.opacity = '1'; });
-    row.addEventListener('dragover', e => { e.preventDefault(); row.classList.add('drag-over'); });
-    row.addEventListener('dragleave', () => row.classList.remove('drag-over'));
-    row.addEventListener('drop', e => {
-      e.preventDefault();
-      row.classList.remove('drag-over');
-      if (dragSrcType !== 'section' || !dragSrcEl || dragSrcEl === row) return;
-      const srcId = dragSrcEl.dataset.id;
-      const tgtId = row.dataset.id;
-      const order = siteData.sectionOrder;
-      const si = order.indexOf(srcId);
-      const ti = order.indexOf(tgtId);
-      if (si === -1 || ti === -1) return;
-      order.splice(si, 1);
-      order.splice(ti, 0, srcId);
-      buildSectionsTab();
-    });
-  });
-
-  // Block drag
-  const blockRows = document.querySelectorAll('.block-row[draggable]');
-  blockRows.forEach(row => {
-    row.addEventListener('dragstart', e => {
-      dragSrcEl = row;
-      dragSrcType = 'block';
-      e.dataTransfer.effectAllowed = 'move';
-      setTimeout(() => row.style.opacity = '.4', 0);
-    });
-    row.addEventListener('dragend', () => { row.style.opacity = '1'; });
-    row.addEventListener('dragover', e => { e.preventDefault(); row.classList.add('drag-over'); });
-    row.addEventListener('dragleave', () => row.classList.remove('drag-over'));
-    row.addEventListener('drop', e => {
-      e.preventDefault();
-      row.classList.remove('drag-over');
-      if (dragSrcType !== 'block' || !dragSrcEl || dragSrcEl === row) return;
-      const srcSi = parseInt(dragSrcEl.dataset.si);
-      const srcBi = parseInt(dragSrcEl.dataset.bi);
-      const tgtSi = parseInt(row.dataset.si);
-      const tgtBi = parseInt(row.dataset.bi);
-      if (srcSi !== tgtSi) return; // only within same section
-      const blocks = siteData.customSections[srcSi].blocks;
-      const [moved] = blocks.splice(srcBi, 1);
-      blocks.splice(tgtBi, 0, moved);
-      buildSectionsTab();
+// Drag & drop for sequences within editor
+function initSeqDrag(sectionId) {
+  const cards = document.querySelectorAll('.seq-admin-card[data-section="' + sectionId + '"]');
+  let dragSrc = null;
+  cards.forEach(card => {
+    card.addEventListener('dragstart', e => { dragSrc = card; setTimeout(() => card.style.opacity='.4', 0); });
+    card.addEventListener('dragend',   () => card.style.opacity='1');
+    card.addEventListener('dragover',  e => { e.preventDefault(); card.classList.add('drag-over'); });
+    card.addEventListener('dragleave', () => card.classList.remove('drag-over'));
+    card.addEventListener('drop', e => {
+      e.preventDefault(); card.classList.remove('drag-over');
+      if (!dragSrc || dragSrc === card) return;
+      const si = parseInt(dragSrc.dataset.si);
+      const ti = parseInt(card.dataset.si);
+      const seqs = siteData.sections[sectionId];
+      const [moved] = seqs.splice(si, 1);
+      seqs.splice(ti, 0, moved);
+      buildSeqEditor(sectionId);
     });
   });
 }
 
-async function saveSections() {
-  initSections();
-  // Commit any open name edits
-  document.querySelectorAll('.section-name-input').forEach(inp => {
-    if (inp.style.display === 'block') commitSectionName(inp.id.replace('sinput_',''));
-  });
-  // Read block content from inputs
-  siteData.customSections.forEach((s, si) => {
-    (s.blocks || []).forEach((b, bi) => {
-      const el = document.getElementById('bval_' + si + '_' + bi);
-      if (!el) return;
-      if (b.type === 'media') {
-        b.media = el.value.split('\n').map(u => u.trim()).filter(Boolean);
-      } else {
-        if (!b.content) b.content = {};
-        b.content.es = el.value.trim();
-      }
-    });
-  });
-  try {
-    // Save fixed section custom names
-    const fixedNames = {};
-    FIXED_SECTIONS.forEach(f => { fixedNames[f.id] = f.names; });
-    await fbPut('/sectionOrder', siteData.sectionOrder);
-    await fbPut('/customSections', siteData.customSections.length ? siteData.customSections : []);
-    await fbPut('/fixedSectionNames', fixedNames);
-    // Update DOM: nav links + section headings
-    renderNavSections();
-    renderCustomSections();
-    updateFixedSectionHeadings();
-    const msg = document.getElementById('saveMsg6');
-    if (msg) { msg.classList.add('show'); setTimeout(() => msg.classList.remove('show'), 2500); }
-    showDiag('✅ Secciones guardadas', 'green');
-  } catch(e) {
-    showDiag('❌ Error: ' + e.message, 'red');
-  }
-}
-
-function updateFixedSectionHeadings() {
-  // Update visible section titles in the page body for fixed sections
-  const sectionHeadings = {
-    alquiler:  { tag: '[data-i18n="rental_tag"]',   title: '[data-i18n="rental_title"]' },
-    servicios: { tag: '[data-i18n="services_tag"]',  title: '[data-i18n="services_title"]' },
-    galeria:   { tag: '[data-i18n="gallery_tag"]',   title: '[data-i18n="gallery_title"]' },
-    contacto:  { tag: '[data-i18n="contact_tag"]',   title: '[data-i18n="contact_title"]' },
-  };
-  FIXED_SECTIONS.forEach(f => {
-    const name = f.names[lang] || f.names.es;
-    // Update nav link text
-    const navLink = document.querySelector('a[href="#' + f.id + '"]');
-    if (navLink) navLink.textContent = name;
-    // Update footer link
-    const footerLink = document.querySelector('footer a[href="#' + f.id + '"]');
-    if (footerLink) footerLink.textContent = name;
-  });
-}
-
-function renderNavSections() {
-  initSections();
-  const navLinks = document.querySelector('.nav-links');
-  if (!navLinks) return;
-
-  const fixedKeys = { alquiler:'nav_rental', servicios:'nav_services', galeria:'nav_gallery', contacto:'nav_contact' };
-
-  const all = [
-    ...FIXED_SECTIONS.map(f => ({
-      id: f.id,
-      name: (i18n[lang] && i18n[lang][fixedKeys[f.id]]) || f.names[lang] || f.names.es,
-      i18nKey: fixedKeys[f.id],
-      type: 'fixed'
-    })),
-    ...siteData.customSections.map(s => ({
-      id: s.id,
-      name: (s.names && (s.names[lang] || s.names.es)) || 'Sección',
-      type: 'custom'
-    }))
-  ];
-
-  const ordered = siteData.sectionOrder.map(id => all.find(s => s.id === id)).filter(Boolean);
-  navLinks.innerHTML = ordered.map(s => {
-    const attrs = s.i18nKey ? ' data-i18n="' + s.i18nKey + '"' : '';
-    return '<li><a href="#' + s.id + '"' + attrs + '>' + s.name + '</a></li>';
-  }).join('');
-}
-
-function renderCustomSections() {
-  initSections();
-
-  // Remove existing custom sections
-  document.querySelectorAll('section.custom-section').forEach(el => el.remove());
-
-  // Build custom section elements
-  const customEls = {};
-  siteData.customSections.forEach(s => {
-    const sec = document.createElement('section');
-    sec.id = s.id;
-    sec.className = 'custom-section';
-    sec.style.cssText = 'padding:6rem 4vw;background:var(--white)';
-    const name = s.names?.[lang] || s.names?.es || '';
-    let html = '<div style="max-width:1100px;margin:0 auto">';
-    html += '<div class="section-tag">' + name + '</div>';
-    (s.blocks || []).forEach(b => {
-      const val = b.content?.[lang] || b.content?.es || '';
-      if (b.type === 'title')         html += '<h2 class="section-title" style="margin-top:1rem">' + val + '</h2>';
-      else if (b.type === 'subtitle') html += '<h3 style="font-family:var(--font-display);font-size:1.3rem;margin-top:.8rem;color:var(--charcoal)">' + val + '</h3>';
-      else if (b.type === 'text')     html += '<p class="section-lead" style="margin-top:.8rem">' + val + '</p>';
-      else if (b.type === 'media') {
-        html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin-top:1.5rem">';
-        (b.media || []).forEach(url => {
-          const ytId = getYouTubeId(url);
-          if (ytId) html += '<div style="aspect-ratio:16/9"><iframe src="https://www.youtube.com/embed/' + ytId + '" style="width:100%;height:100%;border:none" allowfullscreen></iframe></div>';
-          else html += '<img src="' + url + '" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:4px" loading="lazy">';
-        });
-        html += '</div>';
-      }
-    });
-    html += '</div>';
-    sec.innerHTML = html;
-    customEls[s.id] = sec;
-  });
-
-  // Map of fixed section DOM elements
-  const fixedEls = {
-    alquiler:  document.getElementById('alquiler'),
-    servicios: document.getElementById('servicios'),
-    galeria:   document.getElementById('galeria'),
-    contacto:  document.getElementById('contacto'),
-  };
-  const footer = document.querySelector('footer');
-  if (!footer) return;
-  const parent = footer.parentNode;
-
-  // Remove fixed sections from DOM temporarily
-  Object.values(fixedEls).forEach(el => { if (el) el.remove(); });
-
-  // Re-insert all sections in correct order, before footer
-  siteData.sectionOrder.forEach(id => {
-    const el = fixedEls[id] || customEls[id];
-    if (el) parent.insertBefore(el, footer);
-  });
-
-  // Any sections not in sectionOrder go last (safety net)
-  Object.values(fixedEls).forEach(el => {
-    if (el && !el.parentNode) parent.insertBefore(el, footer);
-  });
-}
-
-// ══════════════════════════════════════════════
-//  DESIGN SYSTEM
-// ══════════════════════════════════════════════
-const DEFAULT_DESIGN = {
-  cream: '#F5F0E8', accent: '#C4833A', dark: '#1A1A18', text: '#6B6560',
-  nav: '#F5F0E8', navtext: '#1A1A18',
-  fontCombo: 'playfair-jost', radius: '0px', shadow: 'none', logo: null
-};
-
-const FONT_COMBOS = {
-  'playfair-jost':       { display: "'Playfair Display', Georgia, serif", body: "'Jost', sans-serif", url: 'Playfair+Display:wght@400;700;900&family=Jost:wght@300;400;500;600' },
-  'merriweather-open':   { display: "'Merriweather', Georgia, serif",     body: "'Open Sans', sans-serif", url: 'Merriweather:wght@400;700;900&family=Open+Sans:wght@300;400;500;600' },
-  'montserrat-montserrat':{ display: "'Montserrat', sans-serif",           body: "'Montserrat', sans-serif", url: 'Montserrat:wght@300;400;500;600;700;900' },
-  'raleway-lato':        { display: "'Raleway', sans-serif",               body: "'Lato', sans-serif", url: 'Raleway:wght@400;700;900&family=Lato:wght@300;400;700' },
-  'lora-source':         { display: "'Lora', Georgia, serif",              body: "'Source Sans 3', sans-serif", url: 'Lora:wght@400;700&family=Source+Sans+3:wght@300;400;500;600' },
-  'oswald-roboto':       { display: "'Oswald', sans-serif",                body: "'Roboto', sans-serif", url: 'Oswald:wght@400;500;600;700&family=Roboto:wght@300;400;500' },
-};
-
-const SHADOW_VALUES = {
-  none:   'none',
-  soft:   '0 4px 16px rgba(0,0,0,.08)',
-  strong: '0 8px 32px rgba(0,0,0,.2)'
-};
-
-let currentDesign = { ...DEFAULT_DESIGN };
-let pendingLogoB64 = null;
-
-function syncColorText(key) {
-  const val = document.getElementById('clr_' + key).value;
-  document.getElementById('clr_' + key + '_txt').value = val;
-}
-function syncColorPicker(key) {
-  const val = document.getElementById('clr_' + key + '_txt').value;
-  if (/^#[0-9A-Fa-f]{6}$/.test(val))
-    document.getElementById('clr_' + key).value = val;
-}
-function setStyleOpt(btn, group, value) {
-  btn.closest('.admin-card').querySelectorAll('.style-opt[onclick*="' + group + '"]').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-}
-
-function handleLogoUpload(input) {
-  const file = input.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    pendingLogoB64 = e.target.result;
-    const prev = document.getElementById('logoPreviewImg');
-    prev.src = pendingLogoB64;
-    prev.style.display = 'block';
-  };
-  reader.readAsDataURL(file);
-}
-
-function applyAndSaveDesign() {
-  const design = getDesignFromForm();
-  applyDesignToPage(design);
-  currentDesign = design;
-  // Save to Firebase
-  fbPut('/design', design).then(() => {
-    const msg = document.getElementById('saveMsg5');
-    if (msg) { msg.classList.add('show'); setTimeout(() => msg.classList.remove('show'), 2500); }
-    document.getElementById('btnDiscardDesign').style.display = 'none';
-    document.getElementById('previewBanner').style.display = 'none';
-    document.getElementById('btnPreview').textContent = '👁️ Previsualizar';
-    showDiag('✅ Diseño guardado', 'green');
-  }).catch(e => {
-    showDiag('❌ Error guardando diseño: ' + e.message, 'red');
-  });
-}
-
-function applyDesignToPage(d) {
-  const root = document.documentElement;
-  const accent = d.accent || DEFAULT_DESIGN.accent;
-  const accentLight = lightenColor(accent, 20);
-  root.style.setProperty('--cream',        d.cream  || DEFAULT_DESIGN.cream);
-  root.style.setProperty('--warm',         blendColors(d.cream || DEFAULT_DESIGN.cream, '#000', 0.08));
-  root.style.setProperty('--sand',         blendColors(d.cream || DEFAULT_DESIGN.cream, '#000', 0.18));
-  root.style.setProperty('--dark',         d.dark   || DEFAULT_DESIGN.dark);
-  root.style.setProperty('--charcoal',     lightenColor(d.dark || DEFAULT_DESIGN.dark, 10));
-  root.style.setProperty('--accent',       accent);
-  root.style.setProperty('--accent-light', accentLight);
-  root.style.setProperty('--white',        lightenColor(d.cream || DEFAULT_DESIGN.cream, 3));
-  root.style.setProperty('--text-muted',   d.text   || DEFAULT_DESIGN.text);
-  // Nav colors
-  const navBg = d.nav || d.cream || DEFAULT_DESIGN.cream;
-  const navTxt = d.navtext || DEFAULT_DESIGN.dark;
-  const navEl = document.querySelector('nav');
-  if (navEl) {
-    navEl.style.background = hexToRgba(navBg, 0.92);
-    navEl.style.color = navTxt;
-  }
-  // Nav links + logo text color
-  document.querySelectorAll('.nav-links a, .nav-logo span').forEach(el => { el.style.color = navTxt; });
-  // Fonts
-  const fonts = FONT_COMBOS[d.fontCombo] || FONT_COMBOS['playfair-jost'];
-  root.style.setProperty('--font-display', fonts.display);
-  root.style.setProperty('--font-body',    fonts.body);
-  loadGoogleFont(fonts.url);
-  // Cards radius
-  const radius = d.radius || '0px';
-  document.querySelectorAll('.camper-card, .service-card, .admin-card, .camper-admin-card').forEach(el => {
-    el.style.borderRadius = radius;
-  });
-  // Shadows
-  const shadow = SHADOW_VALUES[d.shadow] || 'none';
-  document.querySelectorAll('.camper-card').forEach(el => { el.style.boxShadow = shadow; });
-  // Logo
-  if (d.logo) {
-    document.querySelectorAll('.nav-logo img').forEach(img => { img.src = d.logo; });
-    updateFavicon(d.logo);
-  }
-}
-
-function loadGoogleFont(url) {
-  const id = 'dynamic-font';
-  let link = document.getElementById(id);
-  if (!link) { link = document.createElement('link'); link.id = id; link.rel = 'stylesheet'; document.head.appendChild(link); }
-  link.href = 'https://fonts.googleapis.com/css2?family=' + url + '&display=swap';
-}
-
-function updateFavicon(b64) {
-  document.querySelectorAll('link[rel="icon"], link[rel="apple-touch-icon"]').forEach(l => { l.href = b64; });
-}
-
-function hexToRgba(hex, alpha) {
-  const n = parseInt(hex.replace('#',''), 16);
-  return 'rgba(' + (n>>16) + ',' + ((n>>8)&0xff) + ',' + (n&0xff) + ',' + alpha + ')';
-}
-
-function lightenColor(hex, pct) {
-  const n = parseInt(hex.replace('#',''), 16);
-  const r = Math.min(255, (n>>16) + Math.round(pct*2.55));
-  const g = Math.min(255, ((n>>8)&0xff) + Math.round(pct*2.55));
-  const b = Math.min(255, (n&0xff) + Math.round(pct*2.55));
-  return '#' + [r,g,b].map(x=>x.toString(16).padStart(2,'0')).join('');
-}
-
-function blendColors(hex, hex2, ratio) {
-  const a = parseInt(hex.replace('#',''),16), b2 = parseInt(hex2.replace('#',''),16);
-  const r = Math.round(((a>>16)*(1-ratio)) + ((b2>>16)*ratio));
-  const g = Math.round((((a>>8)&0xff)*(1-ratio)) + (((b2>>8)&0xff)*ratio));
-  const b = Math.round(((a&0xff)*(1-ratio)) + ((b2&0xff)*ratio));
-  return '#' + [r,g,b].map(x=>x.toString(16).padStart(2,'0')).join('');
-}
-
-function previewDesign() {
-  // Apply visually without saving to Firebase
-  const design = getDesignFromForm();
-  applyDesignToPage(design);
-  // Show discard + preview banner
-  document.getElementById('btnDiscardDesign').style.display = 'inline-block';
-  document.getElementById('previewBanner').style.display = 'block';
-  document.getElementById('btnPreview').textContent = '🔄 Actualizar preview';
-  showDiag('👁️ Previsualización activa — no guardado', 'orange');
-}
-
-function discardDesign() {
-  // Revert to last saved design
-  applyDesignToPage(currentDesign);
-  loadDesignTab(currentDesign);
-  document.getElementById('btnDiscardDesign').style.display = 'none';
-  document.getElementById('previewBanner').style.display = 'none';
-  document.getElementById('btnPreview').textContent = '👁️ Previsualizar';
-  showDiag('↩️ Cambios descartados', 'orange');
-}
-
-function getDesignFromForm() {
-  const getActiveOpt = (group) => {
-    const el = document.querySelector('.style-opt.active[onclick*="' + group + '"]');
-    if (!el) return group === 'radius' ? '0px' : 'none';
-    const m = el.getAttribute('onclick').match(/'([^']+)'\)/);
-    return m ? m[1] : (group === 'radius' ? '0px' : 'none');
-  };
-  return {
-    cream:   document.getElementById('clr_cream')?.value   || DEFAULT_DESIGN.cream,
-    accent:  document.getElementById('clr_accent')?.value  || DEFAULT_DESIGN.accent,
-    dark:    document.getElementById('clr_dark')?.value    || DEFAULT_DESIGN.dark,
-    text:    document.getElementById('clr_text')?.value    || DEFAULT_DESIGN.text,
-    nav:     document.getElementById('clr_nav')?.value     || DEFAULT_DESIGN.nav,
-    navtext: document.getElementById('clr_navtext')?.value || DEFAULT_DESIGN.navtext,
-    fontCombo: document.getElementById('fontCombo')?.value || DEFAULT_DESIGN.fontCombo,
-    radius:  getActiveOpt('radius'),
-    shadow:  getActiveOpt('shadow'),
-    logo:    pendingLogoB64 || currentDesign.logo || null
-  };
-}
-
-function restoreDefaultDesign() {
-  if (!confirm('¿Restaurar el diseño original? Se perderán los cambios.')) return;
-  fbPut('/design', DEFAULT_DESIGN).then(() => {
-    applyDesignToPage(DEFAULT_DESIGN);
-    currentDesign = { ...DEFAULT_DESIGN };
-    loadDesignTab(DEFAULT_DESIGN);
-    showDiag('✅ Diseño restaurado', 'green');
-  }).catch(e => showDiag('❌ Error: ' + e.message, 'red'));
-}
-
-function loadDesignTab(d) {
-  if (!d) return;
-  ['cream','accent','dark','text','nav','navtext'].forEach(k => {
-    const val = d[k] || DEFAULT_DESIGN[k];
-    const picker = document.getElementById('clr_' + k);
-    const txt = document.getElementById('clr_' + k + '_txt');
-    if (picker) picker.value = val;
-    if (txt) txt.value = val;
-  });
-  const fontSel = document.getElementById('fontCombo');
-  if (fontSel && d.fontCombo) fontSel.value = d.fontCombo;
-  // Radius buttons
-  document.querySelectorAll('.style-opt').forEach(btn => {
-    const match = btn.getAttribute('onclick')?.match(/'([^']+)'\)/);
-    if (!match) return;
-    const val = match[1];
-    if (btn.getAttribute('onclick').includes('radius') && val === (d.radius || '0px')) btn.classList.add('active');
-    else if (btn.getAttribute('onclick').includes('shadow') && val === (d.shadow || 'none')) btn.classList.add('active');
-    else btn.classList.remove('active');
-  });
-  if (d.logo) {
-    const prev = document.getElementById('logoPreviewImg');
-    if (prev) { prev.src = d.logo; prev.style.display = 'block'; }
-  }
-}
-
-// ══════════════════════════════════════════════
-//  IMAGE UPLOAD HANDLERS
-// ══════════════════════════════════════════════
-function fileToBase64(file) {
-  return new Promise((resolve) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        // Max dimension 800px
-        let w = img.width, h = img.height;
-        const maxDim = 800;
-        if (w > maxDim || h > maxDim) {
-          if (w > h) { h = Math.round(h * maxDim / w); w = maxDim; }
-          else       { w = Math.round(w * maxDim / h); h = maxDim; }
-        }
-        canvas.width = w; canvas.height = h;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, w, h);
-        // Compress to JPEG quality 0.65 — typically 50-100KB
-        const compressed = canvas.toDataURL('image/jpeg', 0.65);
-        const kb = Math.round(compressed.length * 0.75 / 1024);
-        showDiag('Foto comprimida: ' + kb + 'KB (' + w + 'x' + h + ')');
-        resolve(compressed);
-      };
-      img.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
-async function handleImageUpload(input, camperIdx) {
-  const files = Array.from(input.files);
-  if (!files.length) return;
-  const previews = document.getElementById(`c_previews_${camperIdx}`);
-  const b64Store = document.getElementById(`c_b64_${camperIdx}`);
-  let existing = [];
-  try { existing = JSON.parse(b64Store.value || '[]'); } catch(e) { existing = []; }
-
-  for (const file of files) {
-    const b64 = await fileToBase64(file);
-    existing.push(b64);
-    // Show preview
-    var item = document.createElement('div');
-    item.className = 'upload-preview-item';
-    var imgIdx = existing.length - 1;
-    item.innerHTML = '<img src="' + b64 + '"><button onclick="removeUploadedImg(' + camperIdx + ',' + imgIdx + ',this.parentElement)">✕</button>';
-    previews.appendChild(item);
-  }
-  b64Store.value = JSON.stringify(existing);
-}
-
-function removeUploadedImg(camperIdx, imgIdx, el) {
-  const b64Store = document.getElementById(`c_b64_${camperIdx}`);
-  let existing = [];
-  try { existing = JSON.parse(b64Store.value || '[]'); } catch(e) {}
-  existing.splice(imgIdx, 1);
-  b64Store.value = JSON.stringify(existing);
-  el.remove();
-}
-
-async function handleGalleryUpload(input) {
-  const files = Array.from(input.files);
-  if (!files.length) return;
-  for (const file of files) {
-    const b64 = await fileToBase64(file);
-    siteData.gallery.push(b64);
-  }
-  buildGalleryAdmin();
-}
-
-// ══════════════════════════════════════════════
-//  SLIDER HELPERS
-// ══════════════════════════════════════════════
-function getYouTubeId(url) {
-  if (!url) return null;
-  const patterns = [
-    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([\w-]{11})/,
-    /youtube\.com\/shorts\/([\w-]{11})/
-  ];
-  for (const p of patterns) {
-    const m = url.match(p);
-    if (m) return m[1];
-  }
-  return null;
-}
-
-function isYouTube(url) { return !!getYouTubeId(url); }
-
-function renderSlide(url, name) {
-  const ytId = getYouTubeId(url);
-  if (ytId) {
-    return `<div class="slide"><iframe src="https://www.youtube.com/embed/${ytId}?rel=0" allowfullscreen loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe></div>`;
-  }
-  return `<div class="slide"><img src="${url}" alt="${name}" loading="lazy"></div>`;
-}
-
-function renderSlider(media, id, name) {
-  if (!media || media.length === 0)
-    return `<div class="card-img-placeholder">🚐</div>`;
-  if (media.length === 1) {
-    const ytId = getYouTubeId(media[0]);
-    if (ytId) return `<div class="slider-wrap"><iframe src="https://www.youtube.com/embed/${ytId}?rel=0" allowfullscreen style="width:100%;height:100%;border:none" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe></div>`;
-    return `<img class="card-img" src="${media[0]}" alt="${name}" loading="lazy">`;
-  }
-  const slides = media.map(u => renderSlide(u, name)).join('');
-  const dots = media.map((_,i) => `<button class="slider-dot${i===0?' active':''}" onclick="goSlide('${id}',${i})"></button>`).join('');
-  return `
-    <div class="slider-wrap" id="sw-${id}">
-      <div class="slider-track" id="st-${id}">${slides}</div>
-      <button class="slider-btn slider-prev" onclick="slideMove('${id}',-1)">&#8249;</button>
-      <button class="slider-btn slider-next" onclick="slideMove('${id}',1)">&#8250;</button>
-      <div class="slider-dots" id="sd-${id}">${dots}</div>
-      <div class="slider-count" id="sc-${id}">1 / ${media.length}</div>
-    </div>`;
-}
-
-function slideMove(id, dir) {
-  const track = document.getElementById('st-'+id);
-  if (!track) return;
-  const total = track.children.length;
-  let cur = parseInt(track.dataset.cur||'0');
-  cur = (cur + dir + total) % total;
-  track.dataset.cur = cur;
-  track.style.transform = `translateX(-${cur*100}%)`;
-  // dots
-  const dotsEl = document.getElementById('sd-'+id);
-  if (dotsEl) [...dotsEl.children].forEach((d,i) => d.classList.toggle('active', i===cur));
-  // count
-  const sc = document.getElementById('sc-'+id);
-  if (sc) sc.textContent = `${cur+1} / ${total}`;
-}
-
-function goSlide(id, idx) {
-  const track = document.getElementById('st-'+id);
-  if (!track) return;
-  const total = track.children.length;
-  track.dataset.cur = idx;
-  track.style.transform = `translateX(-${idx*100}%)`;
-  const dotsEl = document.getElementById('sd-'+id);
-  if (dotsEl) [...dotsEl.children].forEach((d,i) => d.classList.toggle('active', i===idx));
-  const sc = document.getElementById('sc-'+id);
-  if (sc) sc.textContent = `${idx+1} / ${total}`;
-}
-
-function renderGalleryItem(url, i) {
-  const ytId = getYouTubeId(url);
-  if (ytId) {
-    return `<div class="gallery-item reveal"><iframe src="https://www.youtube.com/embed/${ytId}?rel=0" allowfullscreen loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe></div>`;
-  }
-  return `<div class="gallery-item reveal"><img src="${url}" alt="Ancarvancamper ${i+1}" loading="lazy"></div>`;
-}
-
-
-// ══════════════════════════════════════════════
-//  FEATURE TRANSLATIONS (render-time)
-// ══════════════════════════════════════════════
-const FEAT_DICT = {
-  'Cama fija':         {en:'Fixed bed',      fr:'Lit fixe',        de:'Festbett',          pt:'Cama fixa',       ca:'Llit fix',        ar:'سرير ثابت'},
-  'Cocina':            {en:'Kitchen',         fr:'Cuisine',         de:'Küche',             pt:'Cozinha',         ca:'Cuina',           ar:'مطبخ'},
-  'Nevera':            {en:'Fridge',          fr:'Réfrigérateur',   de:'Kühlschrank',       pt:'Geladeira',       ca:'Nevera',          ar:'ثلاجة'},
-  'Ducha':             {en:'Shower',          fr:'Douche',          de:'Dusche',            pt:'Chuveiro',        ca:'Dutxa',           ar:'دش'},
-  'WiFi':              {en:'WiFi',            fr:'WiFi',            de:'WiFi',              pt:'WiFi',            ca:'WiFi',            ar:'واي فاي'},
-  '4 plazas':          {en:'4 seats',         fr:'4 places',        de:'4 Sitze',           pt:'4 lugares',       ca:'4 places',        ar:'4 مقاعد'},
-  'Techo elevable':    {en:'Pop-up roof',     fr:'Toit relevable',  de:'Hubdach',           pt:'Teto elevatório', ca:'Sostre elevable', ar:'سقف قابل للرفع'},
-  'Cama doble':        {en:'Double bed',      fr:'Lit double',      de:'Doppelbett',        pt:'Cama dupla',      ca:'Llit doble',      ar:'سرير مزدوج'},
-  'Cama doble (x2)':   {en:'Double bed (x2)', fr:'Lit double (x2)', de:'Doppelbett (x2)',   pt:'Cama dupla (x2)', ca:'Llit doble (x2)', ar:'سرير مزدوج (x2)'},
-  'Cocina completa':   {en:'Full kitchen',    fr:'Cuisine complète',de:'Vollküche',         pt:'Cozinha completa',ca:'Cuina completa',  ar:'مطبخ كامل'},
-  'Aire acondicionado':{en:'Air conditioning',fr:'Climatisation',   de:'Klimaanlage',       pt:'Ar condicionado', ca:'Aire condicionat',ar:'تكييف هواء'},
-  'GPS':               {en:'GPS',             fr:'GPS',             de:'GPS',               pt:'GPS',             ca:'GPS',             ar:'نظام تحديد الموقع'},
-  'Seguro incluido':   {en:'Insurance included',fr:'Assurance incluse',de:'Versicherung inklusive',pt:'Seguro incluído',ca:'Assegurança inclosa',ar:'التأمين مشمول'},
-  'Asistencia 24h':    {en:'24h assistance',  fr:'Assistance 24h',  de:'24h Pannenhilfe',   pt:'Assistência 24h', ca:'Assistència 24h', ar:'مساعدة على مدار الساعة'},
-  'Cama':              {en:'Bed',             fr:'Lit',             de:'Bett',              pt:'Cama',            ca:'Llit',            ar:'سرير'},
-};
-
-function translateFeature(f, l) {
-  if (l === 'es') return f;
-  const entry = FEAT_DICT[f.trim()];
-  return (entry && entry[l]) ? entry[l] : f;
-}
-
-// ══════════════════════════════════════════════
-//  TRANSLATIONS
-// ══════════════════════════════════════════════
-const i18n = {
-  es: {
-    nav_rental:'Alquiler', nav_services:'Servicios', nav_gallery:'Galería', nav_contact:'Contacto',
-    hero_tag:'Málaga · España',
-    hero_title:'Tu aventura<br>empieza <em>aquí</em>',
-    hero_sub:'Alquiler, reparación y camperización de furgonetas en Málaga. Vive la carretera a tu manera.',
-    hero_cta1:'Ver campervans', hero_cta2:'Contáctanos', scroll:'Scroll',
-    rental_tag:'🚐 Flota', rental_title:'Campervans en alquiler',
-    rental_lead:'Elige tu campervan y escríbenos para consultar disponibilidad. Sin intermediarios.',
-    services_tag:'🔧 Lo que hacemos', services_title:'Nuestros servicios',
-    services_lead:'Más de 10 años transformando furgonetas en hogares sobre ruedas.',
-    gallery_tag:'📸 Galería', gallery_title:'Nuestro trabajo',
-    contact_tag:'📍 Encuéntranos', contact_title:'Hablemos',
-    contact_lead:'Consulta disponibilidad, precios o cualquier duda. Respondemos rápido.',
-    address_label:'Dirección', wa_btn:'Escribir por WhatsApp', mail_btn:'Enviar un email',
-  },
-  en: {
-    nav_rental:'Rental', nav_services:'Services', nav_gallery:'Gallery', nav_contact:'Contact',
-    hero_tag:'Málaga · Spain',
-    hero_title:'Your adventure<br>starts <em>here</em>',
-    hero_sub:'Campervan rental, repair and conversion in Málaga. Live the road your way.',
-    hero_cta1:'View campervans', hero_cta2:'Contact us', scroll:'Scroll',
-    rental_tag:'🚐 Fleet', rental_title:'Campervans for rent',
-    rental_lead:'Choose your campervan and write to us to check availability. No middlemen.',
-    services_tag:'🔧 What we do', services_title:'Our services',
-    services_lead:'Over 10 years turning vans into homes on wheels.',
-    gallery_tag:'📸 Gallery', gallery_title:'Our work',
-    contact_tag:'📍 Find us', contact_title:"Let's talk",
-    contact_lead:'Ask about availability, prices or anything else. We reply fast.',
-    address_label:'Address', wa_btn:'Message on WhatsApp', mail_btn:'Send an email',
-  },
-  fr: {
-    nav_rental:'Location', nav_services:'Services', nav_gallery:'Galerie', nav_contact:'Contact',
-    hero_tag:'Málaga · Espagne',
-    hero_title:'Votre aventure<br>commence <em>ici</em>',
-    hero_sub:'Location, réparation et aménagement de camping-cars à Málaga. Vivez la route à votre façon.',
-    hero_cta1:'Voir les campervans', hero_cta2:'Nous contacter', scroll:'Défiler',
-    rental_tag:'🚐 Flotte', rental_title:'Campervans en location',
-    rental_lead:'Choisissez votre campervan et écrivez-nous pour vérifier la disponibilité.',
-    services_tag:'🔧 Ce que nous faisons', services_title:'Nos services',
-    services_lead:'Plus de 10 ans à transformer des vans en maisons sur roues.',
-    gallery_tag:'📸 Galerie', gallery_title:'Notre travail',
-    contact_tag:'📍 Trouvez-nous', contact_title:'Parlons-en',
-    contact_lead:'Demandez la disponibilité, les tarifs ou autre chose. On répond vite.',
-    address_label:'Adresse', wa_btn:'Écrire sur WhatsApp', mail_btn:'Envoyer un email',
-  },
-  pt: {
-    nav_rental:'Aluguel', nav_services:'Serviços', nav_gallery:'Galeria', nav_contact:'Contato',
-    hero_tag:'Málaga · Espanha',
-    hero_title:'Sua aventura<br>começa <em>aqui</em>',
-    hero_sub:'Aluguel, reparação e conversão de vans em Málaga. Viva a estrada do seu jeito.',
-    hero_cta1:'Ver campervans', hero_cta2:'Fale conosco', scroll:'Rolar',
-    rental_tag:'🚐 Frota', rental_title:'Campervans para alugar',
-    rental_lead:'Escolha sua campervan e escreva para verificar disponibilidade.',
-    services_tag:'🔧 O que fazemos', services_title:'Nossos serviços',
-    services_lead:'Mais de 10 anos transformando vans em casas sobre rodas.',
-    gallery_tag:'📸 Galeria', gallery_title:'Nosso trabalho',
-    contact_tag:'📍 Nos encontre', contact_title:'Vamos conversar',
-    contact_lead:'Pergunte sobre disponibilidade, preços ou qualquer dúvida. Respondemos rápido.',
-    address_label:'Endereço', wa_btn:'Escrever no WhatsApp', mail_btn:'Enviar um e-mail',
-  },
-  ca: {
-    nav_rental:'Lloguer', nav_services:'Serveis', nav_gallery:'Galeria', nav_contact:'Contacte',
-    hero_tag:'Màlaga · Espanya',
-    hero_title:'La teva aventura<br>comença <em>aquí</em>',
-    hero_sub:'Lloguer, reparació i camperització de furgonetes a Màlaga. Viu la carretera a la teva manera.',
-    hero_cta1:'Veure campervans', hero_cta2:'Contacta\'ns', scroll:'Desplaça',
-    rental_tag:'🚐 Flota', rental_title:'Campervans de lloguer',
-    rental_lead:'Tria la teva campervan i escriu-nos per consultar disponibilitat.',
-    services_tag:'🔧 El que fem', services_title:'Els nostres serveis',
-    services_lead:'Més de 10 anys transformant furgonetes en llars sobre rodes.',
-    gallery_tag:'📸 Galeria', gallery_title:'El nostre treball',
-    contact_tag:'📍 Troba\'ns', contact_title:'Parlem',
-    contact_lead:'Consulta disponibilitat, preus o qualsevol dubte. Responem ràpid.',
-    address_label:'Adreça', wa_btn:'Escriure per WhatsApp', mail_btn:'Enviar un correu',
-  },
-  ar: {
-    nav_rental:'تأجير', nav_services:'الخدمات', nav_gallery:'معرض الصور', nav_contact:'اتصل بنا',
-    hero_tag:'ملقا · إسبانيا',
-    hero_title:'مغامرتك<br>تبدأ <em>هنا</em>',
-    hero_sub:'تأجير وإصلاح وتحويل الشاحنات في ملقا. عش الطريق بطريقتك.',
-    hero_cta1:'عرض الشاحنات', hero_cta2:'تواصل معنا', scroll:'تمرير',
-    rental_tag:'🚐 الأسطول', rental_title:'شاحنات للتأجير',
-    rental_lead:'اختر شاحنتك وتواصل معنا للاستفسار عن التوفر.',
-    services_tag:'🔧 ما نقدمه', services_title:'خدماتنا',
-    services_lead:'أكثر من 10 سنوات في تحويل الشاحنات إلى منازل على عجلات.',
-    gallery_tag:'📸 معرض الصور', gallery_title:'أعمالنا',
-    contact_tag:'📍 موقعنا', contact_title:'تحدث إلينا',
-    contact_lead:'استفسر عن التوفر والأسعار أو أي شيء آخر. نرد بسرعة.',
-    address_label:'العنوان', wa_btn:'راسلنا على واتساب', mail_btn:'إرسال بريد إلكتروني',
-  },
-  de: {
-    nav_rental:'Vermietung', nav_services:'Leistungen', nav_gallery:'Galerie', nav_contact:'Kontakt',
-    hero_tag:'Málaga · Spanien',
-    hero_title:'Dein Abenteuer<br>beginnt <em>hier</em>',
-    hero_sub:'Wohnmobilvermietung, Reparatur und Ausbau in Málaga. Erlebe die Straße auf deine Weise.',
-    hero_cta1:'Campervans ansehen', hero_cta2:'Kontakt aufnehmen', scroll:'Scrollen',
-    rental_tag:'🚐 Flotte', rental_title:'Campervans zur Miete',
-    rental_lead:'Wähle deinen Campervan und schreib uns zur Verfügbarkeitsprüfung.',
-    services_tag:'🔧 Was wir tun', services_title:'Unsere Leistungen',
-    services_lead:'Über 10 Jahre damit beschäftigt, Vans in rollende Häuser zu verwandeln.',
-    gallery_tag:'📸 Galerie', gallery_title:'Unsere Arbeit',
-    contact_tag:'📍 Finde uns', contact_title:'Lass uns reden',
-    contact_lead:'Frag nach Verfügbarkeit, Preisen oder anderen Dingen. Wir antworten schnell.',
-    address_label:'Adresse', wa_btn:'WhatsApp schreiben', mail_btn:'E-Mail senden',
-  }
-};
-
-// ══════════════════════════════════════════════
-//  DEFAULT DATA
-// ══════════════════════════════════════════════
-const defaultData = {
-  // Company
-  companyName: 'Ancarvancamper',
-  wa: '+34658794510',
-  email: 'ancarvancamper@gmail.com',
-  address: 'Calle Pez Luna n14\nMálaga 29018, España',
-  mapsUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3197.5!2d-4.4244!3d36.7213!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd72f798de4b5857%3A0x3f68c5a5b6b0b6a0!2sCalle%20Pez%20Luna%2C%2014%2C%2029018%20M%C3%A1laga!5e0!3m2!1ses!2ses!4v1699000000000!5m2!1ses!2ses',
-  instagramUrl: 'https://www.instagram.com/ancarvancamper',
-  fbUrl: 'https://ancarvancamper-2ceb5-default-rtdb.firebaseio.com',
-  campers: [
-    {
-      id: 1,
-      name: 'Van Aventura',
-      desc: { es: 'Furgoneta totalmente equipada con cama fija, cocina integrada y zona de estar. Perfecta para 2 personas.', en: 'Fully equipped van with fixed bed, integrated kitchen and living area. Perfect for 2 people.', fr: 'Fourgon entièrement équipé avec lit fixe, cuisine intégrée et espace de vie. Parfait pour 2 personnes.', de: 'Voll ausgestatteter Van mit Festbett, eingebauter Küche und Wohnbereich. Perfekt für 2 Personen.' },
-      features: {
-        es: ['Cama fija','Cocina','Nevera','Ducha','WiFi','4 plazas'],
-        en: ['Fixed bed','Kitchen','Fridge','Shower','WiFi','4 seats'],
-        fr: ['Lit fixe','Cuisine','Réfrigérateur','Douche','WiFi','4 places'],
-        de: ['Festbett','Küche','Kühlschrank','Dusche','WiFi','4 Sitze'],
-        pt: ['Cama fixa','Cozinha','Geladeira','Chuveiro','WiFi','4 lugares'],
-        ca: ['Llit fix','Cuina','Nevera','Dutxa','WiFi','4 places'],
-        ar: ['سرير ثابت','مطبخ','ثلاجة','دش','واي فاي','4 مقاعد']
-      },
-      media: ['']
-    },
-    {
-      id: 2,
-      name: 'Van Libertad',
-      desc: { es: 'Amplia campervan con techo elevable, ideal para familias. Espacio extra para los que buscan más comodidad.', en: 'Spacious campervan with pop-up roof, ideal for families. Extra space for those seeking more comfort.', fr: 'Grand camping-car avec toit relevable, idéal pour les familles. Espace supplémentaire pour plus de confort.', de: 'Geräumiger Campervan mit Hubdach, ideal für Familien. Mehr Platz für mehr Komfort.' },
-      features: {
-        es: ['Techo elevable','Cama doble','Cocina completa','4 plazas','Aire acondicionado'],
-        en: ['Pop-up roof','Double bed','Full kitchen','4 seats','Air conditioning'],
-        fr: ['Toit relevable','Lit double','Cuisine complète','4 places','Climatisation'],
-        de: ['Hubdach','Doppelbett','Vollküche','4 Sitze','Klimaanlage'],
-        pt: ['Teto elevatório','Cama dupla','Cozinha completa','4 lugares','Ar condicionado'],
-        ca: ['Sostre elevable','Llit doble','Cuina completa','4 places','Aire condicionat'],
-        ar: ['سقف قابل للرفع','سرير مزدوج','مطبخ كامل','4 مقاعد','تكييف هواء']
-      },
-      media: ['']
-    }
-  ],
-  services: [
-    {
-      icon: '🚐',
-      name: { es: 'Alquiler', en: 'Rental', fr: 'Location', de: 'Vermietung' },
-      desc: { es: 'Alquila tu campervan por días o semanas. Flota siempre revisada y lista para la aventura.', en: 'Rent your campervan by the day or week. Fleet always checked and ready for adventure.', fr: 'Louez votre camping-car à la journée ou à la semaine. Flotte toujours vérifiée et prête pour l\'aventure.', de: 'Miete deinen Campervan tage- oder wochenweise. Flotte immer geprüft und abenteuerbereit.' },
-      items: { es: ['Seguro incluido','GPS de serie','Kit de camping','Asistencia 24h','Recogida en Málaga'], en: ['Insurance included','GPS included','Camping kit','24h assistance','Pickup in Málaga'], fr: ['Assurance incluse','GPS de série','Kit camping','Assistance 24h','Prise en charge à Málaga'], de: ['Versicherung inklusive','GPS serienmäßig','Camping-Kit','24h-Pannenhilfe','Abholung in Málaga'] }
-    },
-    {
-      icon: '🔧',
-      name: { es: 'Reparación', en: 'Repair', fr: 'Réparation', de: 'Reparatur' },
-      desc: { es: 'Taller especializado en furgonetas y campervans. Diagnóstico, mecánica y reparaciones de todo tipo.', en: 'Workshop specialising in vans and campervans. Diagnosis, mechanics and all types of repairs.', fr: 'Atelier spécialisé dans les vans et camping-cars. Diagnostic, mécanique et réparations de tout type.', de: 'Werkstatt spezialisiert auf Vans und Campervans. Diagnose, Mechanik und alle Arten von Reparaturen.' },
-      items: { es: ['Mecánica general','Eléctrica','Instalaciones de gas','Carpintería interior','Pintura y carrocería'], en: ['General mechanics','Electrical','Gas installations','Interior carpentry','Paint and bodywork'], fr: ['Mécanique générale','Électricité','Installations gaz','Menuiserie intérieure','Carrosserie et peinture'], de: ['Allgemeine Mechanik','Elektrik','Gasinstallationen','Innenausbau','Karosserie und Lackierung'] }
-    },
-    {
-      icon: '✨',
-      name: { es: 'Camperización', en: 'Conversion', fr: 'Aménagement', de: 'Ausbau' },
-      desc: { es: 'Transformamos tu furgoneta en la campervan de tus sueños. Diseño personalizado de principio a fin.', en: 'We transform your van into the campervan of your dreams. Custom design from start to finish.', fr: 'Nous transformons votre fourgon en camping-car de rêve. Conception personnalisée de A à Z.', de: 'Wir verwandeln deinen Van in den Campervan deiner Träume. Individuelle Gestaltung von Anfang bis Ende.' },
-      items: { es: ['Diseño personalizado','Cama fija o abatible','Cocina equipada','Zona de almacenamiento','Sistema eléctrico solar'], en: ['Custom design','Fixed or folding bed','Equipped kitchen','Storage area','Solar electrical system'], fr: ['Design personnalisé','Lit fixe ou rabattable','Cuisine équipée','Espace de rangement','Système électrique solaire'], de: ['Individuelles Design','Fest- oder Klappbett','Ausgestattete Küche','Stauraum','Solarstromsystem'] }
-    }
-  ],
-  // Editable texts (ES base, other langs auto-translated)
-  texts: {
-    es: {
-      hero_tag: 'Málaga · España',
-      hero_title: 'Tu aventura<br>empieza <em>aquí</em>',
-      hero_sub: 'Alquiler, reparación y camperización de furgonetas en Málaga. Vive la carretera a tu manera.',
-      hero_cta1: 'Ver campervans',
-      hero_cta2: 'Contáctanos',
-      rental_tag: '🚐 Flota',
-      rental_title: 'Campervans en alquiler',
-      rental_lead: 'Elige tu campervan y escríbenos para consultar disponibilidad. Sin intermediarios.',
-      services_tag: '🔧 Lo que hacemos',
-      services_title: 'Nuestros servicios',
-      services_lead: 'Más de 10 años transformando furgonetas en hogares sobre ruedas.',
-      gallery_tag: '📸 Galería',
-      gallery_title: 'Nuestro trabajo',
-      contact_tag: '📍 Encuéntranos',
-      contact_title: 'Hablemos',
-      contact_lead: 'Consulta disponibilidad, precios o cualquier duda. Respondemos rápido.',
-      footer_copy: '© 2025',
-      nav_rental: 'Alquiler',
-      nav_services: 'Servicios',
-      nav_gallery: 'Galería',
-      nav_contact: 'Contacto',
-    }
-  },
-  gallery: [
-    '',
-    '',
-    '',
-    '',
-    '',
-  ]
-};
-
-
-// ══════════════════════════════════════════════
-//  FIREBASE CONFIG
-// ══════════════════════════════════════════════
-// ╔══════════════════════════════════════════════════════════════╗
-// ║           CONFIGURACIÓN POR CLIENTE — CUSOL                 ║
-// ║  Actualizar estos valores en cada nueva implementación       ║
-// ╠══════════════════════════════════════════════════════════════╣
-// ║  1. FB_URL_DEFAULT → URL Firebase del cliente               ║
-// ║     Obtener en: console.firebase.google.com                  ║
-// ║     Ejemplo: https://PROYECTO-default-rtdb.firebaseio.com    ║
-// ╚══════════════════════════════════════════════════════════════╝
-const FB_URL_DEFAULT = 'https://ancarvancamper-2ceb5-default-rtdb.firebaseio.com';
-// FB_URL is dynamic - loaded from siteData or fallback to default
-let FB_URL = FB_URL_DEFAULT;
-
-async function fbPut(path, data) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 15000);
-  try {
-    const body = JSON.stringify(data);
-    const res = await fetch(FB_URL + path + '.json', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body,
-      signal: controller.signal
-    });
-    clearTimeout(timer);
-    if (!res.ok) {
-      const txt = await res.text();
-      throw new Error('HTTP ' + res.status + ': ' + txt.substring(0, 120));
-    }
-    return res.json();
-  } catch(e) {
-    clearTimeout(timer);
-    if (e.name === 'AbortError') throw new Error('Timeout — Firebase tardó demasiado.');
-    throw e;
-  }
-}
-
-async function fbGet(path) {
-  try {
-    const res = await fetch(FB_URL + path + '.json');
-    if (!res.ok) return null;
-    return res.json();
-  } catch(e) { return null; }
-}
-
-async function loadFromCloud() {
-  try {
-    showDiag('Cargando datos...');
-    const res = await fetch(`${FB_URL}/sitedata.json`);
-    if (!res.ok) {
-      showDiag('❌ Error cargando: HTTP ' + res.status, 'red');
-      return null;
-    }
-    const data = await res.json();
-    if (data) showDiag('✅ Datos cargados', 'green');
-    else showDiag('⚠️ Sin datos en Firebase, usando defaults', 'orange');
-    return data;
-  } catch(e) {
-    showDiag('❌ Error Firebase: ' + e.message, 'red');
-    return null;
-  }
-}
-
-
-async function saveToCloud(data) {
-  const res = await fetch(`${FB_URL}/sitedata.json`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  });
-  if (!res.ok) {
-    const txt = await res.text();
-    throw new Error(`Firebase error ${res.status}: ${txt}`);
-  }
-}
-
-// ══════════════════════════════════════════════
-//  STATE
-// ══════════════════════════════════════════════
-let lang = 'es';
-let siteData = defaultData;
-const CREDS = [
-  { user: 'administrador', pass: 'cusol' },
-  { user: 'admin',         pass: 'Sopapa1!' }
-];
-
-// ══════════════════════════════════════════════
-//  LANG
-// ══════════════════════════════════════════════
-// Merge siteData.texts into i18n at runtime
-function mergeTextsIntoI18n() {
-  if (!siteData.texts) return;
-  Object.keys(siteData.texts).forEach(l => {
-    if (!i18n[l]) i18n[l] = {};
-    Object.assign(i18n[l], siteData.texts[l]);
-  });
-}
-
-const LANG_META = {
-  es: { flag:'🇪🇸', name:'Español',   rtl: false },
-  en: { flag:'🇬🇧', name:'English',   rtl: false },
-  fr: { flag:'🇫🇷', name:'Français',  rtl: false },
-  de: { flag:'🇩🇪', name:'Deutsch',   rtl: false },
-  pt: { flag:'🇧🇷', name:'Português', rtl: false },
-  ca: { flag:'🏴',  name:'Català',    rtl: false },
-  ar: { flag:'🇸🇦', name:'العربية',   rtl: true  },
-};
-
-function setLang(l) {
-  lang = l;
-  // Translations
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.getAttribute('data-i18n');
-    if (i18n[l] && i18n[l][key] !== undefined) el.innerHTML = i18n[l][key];
-  });
-  // Update dropdown selected
-  const meta = LANG_META[l] || LANG_META['es'];
-  const sel = document.getElementById('langSelected');
-  const flagEl = document.getElementById('langSelectedFlag');
-  if (flagEl) flagEl.textContent = meta.flag;
-  // Mark active option
-  document.querySelectorAll('.lang-option').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.lang-option').forEach(b => {
-    if (b.getAttribute('onclick') && b.getAttribute('onclick').includes(`'${l}'`)) b.classList.add('active');
-  });
-  // RTL
-  if (meta.rtl) {
-    document.body.classList.add('rtl');
-  } else {
-    document.body.classList.remove('rtl');
-  }
-  document.documentElement.setAttribute('lang', l);
-  renderAll();
-}
-
-
-
-// ══════════════════════════════════════════════
-//  RENDER
-// ══════════════════════════════════════════════
-function renderAll() {
-  renderCampers();
-  renderServices();
-  renderGallery();
-  updateContactLinks();
-  renderNavSections();
-  renderCustomSections();
-}
-
-function txt(obj) { return typeof obj === 'string' ? obj : (obj[lang] || obj['es'] || ''); }
-
-function updateContactLinks() {
-  const waNum = (siteData.wa || '').replace(/\D/g,'');
-  const waSuffix = { es:'Hola! Me interesa una campervan', en:'Hi! I\'m interested in a campervan', fr:'Bonjour! Je suis intéressé par un camping-car', de:'Hallo! Ich interessiere mich für einen Campervan', pt:'Olá! Tenho interesse numa campervan', ca:'Hola! M\'interessa una campervan', ar:'مرحبا! أنا مهتم بشاحنة تخييم' };
-  const waUrl = 'https://wa.me/' + waNum + '?text=' + encodeURIComponent(waSuffix[lang] || waSuffix.es);
-
-  // Update WA links
-  const waLink = document.getElementById('waLink');
-  const waBtn = document.getElementById('waBtn');
-  const floatWa = document.getElementById('floatWa');
-  if (waLink) { waLink.href = waUrl; waLink.textContent = siteData.wa || ''; }
-  if (waBtn) waBtn.href = waUrl;
-  if (floatWa) floatWa.href = waUrl;
-
-  // Update email
-  const mailLink = document.getElementById('mailLink');
-  const mailBtn = document.getElementById('mailBtn');
-  const floatMail = document.getElementById('floatMail');
-  const mailHref = 'mailto:' + (siteData.email || '');
-  if (mailLink) { mailLink.href = mailHref; mailLink.textContent = siteData.email || ''; }
-  if (mailBtn) mailBtn.href = mailHref;
-  if (floatMail) floatMail.href = mailHref;
-
-  // Update address display
-  const addrEl = document.getElementById('addressText');
-  if (addrEl) addrEl.innerHTML = (siteData.address || '').replace(/\n/g,'<br>');
-
-  // Update Google Maps iframe
-  const mapsEl = document.getElementById('mapsIframe');
-  if (mapsEl && siteData.mapsUrl) mapsEl.src = siteData.mapsUrl;
-
-  // Update company name everywhere
-  updateCompanyName();
-
-  // Update Instagram link
-  const igLink = document.querySelector('footer a[href*="instagram"]');
-  if (igLink && siteData.instagramUrl) igLink.href = siteData.instagramUrl;
-
-  // Update FB_URL if changed
-  if (siteData.fbUrl) FB_URL = siteData.fbUrl;
-}
-
-function updateCompanyName() {
-  const name = siteData.companyName || 'Ancarvancamper';
-  // Nav logo text
-  document.querySelectorAll('.nav-logo span').forEach(el => { el.textContent = name; });
-  // Footer brand
-  const brand = document.querySelector('.footer-brand');
-  if (brand) brand.textContent = name;
-  // Footer copy
-  const copy = document.querySelector('.footer-copy');
-  if (copy) copy.textContent = '© ' + new Date().getFullYear() + ' ' + name + ' · Málaga, España';
-  // Meta tags
-  const metaTitle = document.querySelector('meta[name="apple-mobile-web-app-title"]');
-  if (metaTitle) metaTitle.content = name;
-  const metaApp = document.querySelector('meta[name="application-name"]');
-  if (metaApp) metaApp.content = name;
-  document.title = name + ' – Campervan en Málaga';
-}
-
-function renderCampers() {
-  const grid = document.getElementById('rentalGrid');
-  grid.innerHTML = siteData.campers.map(c => {
-    const media = c.media || (c.img ? [c.img] : []);
-    const sliderId = 'c'+c.id;
-    // Get ES features (handle both array and object format)
-    let esFeats = [];
-    if (Array.isArray(c.features)) {
-      esFeats = c.features;
-    } else if (c.features && typeof c.features === 'object') {
-      esFeats = c.features['es'] || c.features[Object.keys(c.features)[0]] || [];
-    }
-    // Translate at render time using dictionary
-    const featHtml = esFeats.map(f=>`<span class="feature-tag">${translateFeature(f, lang)}</span>`).join('');
-    return `
-    <div class="camper-card reveal">
-      ${renderSlider(media, sliderId, c.name)}
-      <div class="card-body">
-        <div class="card-name">${c.name}</div>
-        <div class="card-desc">${txt(c.desc)}</div>
-        <div class="card-features">${featHtml}</div>
-      </div>
-    </div>`;
-  }).join('');
-  initReveal();
-}
-
-function renderServices() {
-  const grid = document.getElementById('servicesGrid');
-  grid.innerHTML = siteData.services.map(s => `
-    <div class="service-card reveal">
-      <div class="service-icon">${s.icon}</div>
-      <div class="service-name">${txt(s.name)}</div>
-      <div class="service-desc">${txt(s.desc)}</div>
-      <ul class="service-list">
-        ${(Array.isArray(s.items) ? s.items : (s.items[lang]||s.items['es']||[])).map(i=>`<li>${i}</li>`).join('')}
-      </ul>
-    </div>
-  `).join('');
-  initReveal();
-}
-
-function renderGallery() {
-  const grid = document.getElementById('galleryGrid');
-  grid.innerHTML = siteData.gallery.map((url,i) =>
-    url ? renderGalleryItem(url, i) : `<div class="gallery-item reveal"><div class="gallery-placeholder">📷</div></div>`
-  ).join('');
-  initReveal();
-}
-
-// ══════════════════════════════════════════════
-//  INTERSECTION OBSERVER
-// ══════════════════════════════════════════════
-function initReveal() {
-  const els = document.querySelectorAll('.reveal:not(.visible)');
-  if (!('IntersectionObserver' in window)) { els.forEach(e=>e.classList.add('visible')); return; }
-  const obs = new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); } });
-  },{ threshold: 0.1 });
-  els.forEach(e=>obs.observe(e));
-}
-
-// ══════════════════════════════════════════════
-//  MOBILE MENU
-// ══════════════════════════════════════════════
-function openMenu() { document.getElementById('mobileMenu').classList.add('open'); }
-function closeMenu() { document.getElementById('mobileMenu').classList.remove('open'); }
-
-// ══════════════════════════════════════════════
-//  ADMIN – LOGIN / LOGOUT
-// ══════════════════════════════════════════════
-function openAdmin() {
-  document.getElementById('admin-overlay').classList.add('visible');
-  if(sessionStorage.getItem('acv_auth')==='1') showPanel(); else showLogin();
-}
-function closeAdmin() { document.getElementById('admin-overlay').classList.remove('visible'); }
-function showLogin() { document.getElementById('adminLogin').style.display='flex'; document.getElementById('adminPanel').style.display='none'; }
-function showPanel() {
-  document.getElementById('adminLogin').style.display='none';
-  document.getElementById('adminPanel').style.display='block';
-  buildAdminPanel();
-  // Show design + sections tabs only for admin user
-  const u = document.getElementById('loginUser').value.trim().toLowerCase();
-  const designBtn = document.getElementById('tab-design-btn');
-  const sectionsBtn = document.getElementById('tab-sections-btn');
-  if (u === 'admin') {
-    if (designBtn) designBtn.style.display = 'inline-block';
-    if (sectionsBtn) sectionsBtn.style.display = 'inline-block';
-    const textsBtn = document.getElementById('tab-texts-btn');
-    if (textsBtn) textsBtn.style.display = 'inline-block';
-  }
-}
-
-function doLogin() {
-  const u = document.getElementById('loginUser').value.trim().toLowerCase();
-  const p = document.getElementById('loginPass').value.trim();
-  const valid = CREDS.some(c => c.user.toLowerCase() === u && c.pass === p);
-  if (valid) {
-    sessionStorage.setItem('acv_auth','1');
-    document.getElementById('loginErr').style.display='none';
-    showPanel();
-  } else {
-    document.getElementById('loginErr').style.display='block';
-  }
-}
-function doLogout() { sessionStorage.removeItem('acv_auth'); showLogin(); }
-
-// ══════════════════════════════════════════════
-//  ADMIN – TABS
-// ══════════════════════════════════════════════
-function switchTab(id) {
-  document.querySelectorAll('.admin-section').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  event.target.classList.add('active');
-}
-
-// ══════════════════════════════════════════════
-//  ADMIN – BUILD PANEL
-// ══════════════════════════════════════════════
-function buildAdminPanel() {
-  document.getElementById('adm_wa').value = siteData.wa;
-  document.getElementById('adm_email').value = siteData.email;
-  document.getElementById('adm_address').value = siteData.address;
-  buildCampersAdmin();
-  buildServicesAdmin();
-  buildGalleryAdmin();
-  setTimeout(restoreCamperPreviews, 50);
-  // Load design tab values
-  loadDesignTab(currentDesign);
-  // Build sections tab
-  buildSectionsTab();
-  // Build texts tab
-  buildTextsTab();
-}
-
-function buildCampersAdmin() {
-  const container = document.getElementById('campersAdmin');
-  container.innerHTML = siteData.campers.map((c,i)=>`
-    <div class="camper-admin-card" id="camper-admin-${i}">
-      <div class="camper-admin-header">
-        <span>🚐 ${c.name}</span>
-        <button class="btn-remove" onclick="removeCamper(${i})">Eliminar</button>
-      </div>
-      <div class="form-group">
-        <label>Nombre</label>
-        <input type="text" id="c_name_${i}" value="${c.name}">
-      </div>
-      <div class="form-group">
-        <label>Descripción (en español)</label>
-        <textarea id="c_desc_es_${i}">${txt2(c.desc,'es')}</textarea>
-      </div>
-      <div style="display:none">
-        <textarea id="c_desc_en_${i}">${txt2(c.desc,'en')}</textarea>
-        <textarea id="c_desc_fr_${i}">${txt2(c.desc,'fr')}</textarea>
-        <textarea id="c_desc_de_${i}">${txt2(c.desc,'de')}</textarea>
-        <textarea id="c_desc_pt_${i}">${txt2(c.desc,'pt')}</textarea>
-      </div>
-      <div class="form-group">
-        <label>Características (una por línea, en español)</label>
-        <textarea id="c_feat_${i}" rows="4">${(Array.isArray(c.features)?c.features:(c.features&&(c.features['es']||c.features[Object.keys(c.features)[0]]))||[]).join('\n')}</textarea>
-        <div style="display:none">
-          <textarea id="c_feat_en_${i}">${((c.features&&c.features['en'])||[]).join('\n')}</textarea>
-          <textarea id="c_feat_fr_${i}">${((c.features&&c.features['fr'])||[]).join('\n')}</textarea>
-          <textarea id="c_feat_de_${i}">${((c.features&&c.features['de'])||[]).join('\n')}</textarea>
-          <textarea id="c_feat_pt_${i}">${((c.features&&c.features['pt'])||[]).join('\n')}</textarea>
-          <textarea id="c_feat_ca_${i}">${((c.features&&c.features['ca'])||[]).join('\n')}</textarea>
-          <textarea id="c_feat_ar_${i}">${((c.features&&c.features['ar'])||[]).join('\n')}</textarea>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Fotos y videos</label>
-        <div class="upload-area" onclick="document.getElementById('c_file_${i}').click()">
-          <input type="file" id="c_file_${i}" accept="image/*" multiple onchange="handleImageUpload(this, ${i})">
-          <label>📷 Tocar para elegir fotos del celular</label>
-        </div>
-        <div class="upload-previews" id="c_previews_${i}"></div>
-        <div style="margin-top:.6rem;font-size:.72rem;color:var(--text-muted)">— o pegá una URL de YouTube —</div>
-        <textarea id="c_media_${i}" rows="2" placeholder="https://youtube.com/watch?v=..." style="margin-top:.4rem">${(c.media||(c.img?[c.img]:[])).filter(u=>u&&!u.startsWith('data:')).join('\n')}</textarea>
-        <div id="c_b64_${i}" style="display:none">${JSON.stringify((c.media||(c.img?[c.img]:[])).filter(u=>u&&u.startsWith('data:')))}</div>
-      </div>
-    </div>
-  `).join('');
-}
-
-function txt2(obj, l) { return typeof obj === 'string' ? obj : (obj[l]||''); }
-
-function restoreCamperPreviews() {
-  siteData.campers.forEach(function(c, i) {
-    var b64Store = document.getElementById('c_b64_' + i);
-    var previews = document.getElementById('c_previews_' + i);
-    if (!b64Store || !previews) return;
-    var existingMedia = c.media || [];
-    var b64Images = existingMedia.filter(function(u) { return u && u.startsWith('data:'); });
-    b64Store.value = JSON.stringify(b64Images);
-    b64Images.forEach(function(b64, imgIdx) {
-      var item = document.createElement('div');
-      item.className = 'upload-preview-item';
-      item.innerHTML = '<img src="' + b64 + '"><button onclick="removeUploadedImg(' + i + ',' + imgIdx + ',this.parentElement)">✕</button>';
-      previews.appendChild(item);
-    });
-  });
-}
-
-function buildServicesAdmin() {
-  const container = document.getElementById('servicesAdmin');
-  container.innerHTML = siteData.services.map((s,i)=>`
-    <div class="admin-card">
-      <h4>${s.icon} ${txt2(s.name,'es')}</h4>
-      <div class="form-group">
-        <label>Nombre del servicio (en español)</label>
-        <input type="text" id="s_name_es_${i}" value="${txt2(s.name,'es')}">
-      </div>
-      <div class="form-group">
-        <label>Descripción (en español)</label>
-        <textarea id="s_desc_es_${i}">${txt2(s.desc,'es')}</textarea>
-      </div>
-      <div class="form-group">
-        <label>Items / características (uno por línea, en español)</label>
-        <textarea id="s_items_es_${i}" rows="5">${(Array.isArray(s.items)?s.items:(s.items['es']||[])).join('\n')}</textarea>
-      </div>
-      <div style="display:none">
-        <input id="s_name_en_${i}" value="${txt2(s.name,'en')}">
-        <input id="s_name_fr_${i}" value="${txt2(s.name,'fr')}">
-        <input id="s_name_de_${i}" value="${txt2(s.name,'de')}">
-        <input id="s_name_pt_${i}" value="${txt2(s.name,'pt')||''}">
-        <textarea id="s_desc_en_${i}">${txt2(s.desc,'en')}</textarea>
-        <textarea id="s_desc_fr_${i}">${txt2(s.desc,'fr')}</textarea>
-        <textarea id="s_desc_de_${i}">${txt2(s.desc,'de')}</textarea>
-        <textarea id="s_desc_pt_${i}">${txt2(s.desc,'pt')||''}</textarea>
-        <textarea id="s_items_en_${i}">${(Array.isArray(s.items)?s.items:(s.items['en']||[])).join('\n')}</textarea>
-        <textarea id="s_items_fr_${i}">${(Array.isArray(s.items)?s.items:(s.items['fr']||[])).join('\n')}</textarea>
-        <textarea id="s_items_de_${i}">${(Array.isArray(s.items)?s.items:(s.items['de']||[])).join('\n')}</textarea>
-        <textarea id="s_items_pt_${i}">${(Array.isArray(s.items)?s.items:(s.items['pt']||[])).join('\n')}</textarea>
-      </div>
-    </div>
-  `).join('');
-}
-
-function buildGalleryAdmin() {
-  const container = document.getElementById('galleryAdmin');
-  // Upload area at top
-  const uploadHtml = `
-    <div class="gallery-upload-area upload-area" onclick="document.getElementById('g_file_upload').click()">
-      <input type="file" id="g_file_upload" accept="image/*" multiple onchange="handleGalleryUpload(this)">
-      <label>📷 Tocar para agregar fotos desde el celular</label>
-    </div>`;
-  container.innerHTML = uploadHtml + siteData.gallery.map((url,i)=>`
-    <div class="admin-card" style="display:flex;gap:1rem;align-items:flex-start;" id="g_item_${i}">
-      <div style="flex:1">
-        <div class="form-group" style="margin-bottom:0">
-          <label>Imagen/Video ${i+1}</label>
-          ${url && url.startsWith('data:')
-            ? '<div style="font-size:.75rem;color:var(--accent-light)">📷 Foto subida</div><input type="hidden" id="g_url_' + i + '" value="' + url + '">'
-            : '<input type="text" id="g_url_' + i + '" value="' + (url||'') + '" placeholder="https://youtube.com/watch?v=...">'
-          }
-        </div>
-      </div>
-      ${url ? '<img src="' + url + '" style="width:80px;height:60px;object-fit:cover;border-radius:3px;flex-shrink:0;margin-top:1.6rem" onerror="this.style.display=\'none\'">' : ''}
-      <button class="btn-remove" style="margin-top:1.6rem;flex-shrink:0" onclick="removeGalleryImg(${i})">✕</button>
-    </div>
-  `).join('');
-}
-
-// ══════════════════════════════════════════════
-//  ADMIN – ACTIONS
-// ══════════════════════════════════════════════
-function removeCamper(i) {
-  if(!confirm('¿Eliminar este campervan?')) return;
-  siteData.campers.splice(i,1);
-  buildCampersAdmin();
-}
-function addCamper() {
-  siteData.campers.push({
-    id: Date.now(), name: 'Nueva campervan',
-    desc:{ es:'Descripción', en:'Description', fr:'Description', de:'Beschreibung' },
-    features:{es:['Cama','Cocina'],en:['Bed','Kitchen'],fr:['Lit','Cuisine'],de:['Bett','Küche'],pt:['Cama','Cozinha'],ca:['Llit','Cuina'],ar:['سرير','مطبخ']}, media:[]
-  });
-  buildCampersAdmin();
-  document.getElementById('campersAdmin').lastElementChild.scrollIntoView({ behavior:'smooth' });
-}
-function addGalleryImg() {
-  siteData.gallery.push('');
-  buildGalleryAdmin();
-}
-function removeGalleryImg(i) {
-  siteData.gallery.splice(i,1);
-  buildGalleryAdmin();
-}
-
-
-// ══════════════════════════════════════════════
-//  TRANSLATION — MyMemory API (free, no key)
-// ══════════════════════════════════════════════
-async function translateText(text, targetLang) {
-  if (!text || !text.trim()) return '';
-  // MyMemory language codes
-  const langMap = { en:'en', fr:'fr', de:'de', pt:'pt-BR' };
-  const to = langMap[targetLang] || targetLang;
-  try {
-    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=es|${to}`;
-    const res = await fetch(url);
-    const data = await res.json();
-    if (data.responseStatus === 200) return data.responseData.translatedText;
-    return text; // fallback to original
-  } catch(e) {
-    return text;
-  }
-}
-
-async function translateLines(text, targetLang) {
-  // translate line by line (for feature lists)
-  const lines = text.split('\n').filter(l => l.trim());
-  const translated = await Promise.all(lines.map(l => translateText(l, targetLang)));
-  return translated.join('\n');
-}
-
-async function translateAll() {
-  const langs = ['en','fr','de','pt','ca','ar'];
-  const btns = document.querySelectorAll('.btn-translate');
-  const msgs = document.querySelectorAll('.translate-msg');
-
-  btns.forEach(b => { b.disabled = true; b.textContent = '⏳ Traduciendo...'; });
-  msgs.forEach(m => { m.textContent = 'Traduciendo, espera un momento...'; m.className = 'translate-msg'; });
-
-  try {
-    // ── Translate campers ──
-    for (let i = 0; i < siteData.campers.length; i++) {
-      const descEs = document.getElementById(`c_desc_es_${i}`)?.value || '';
-      const featEs = document.getElementById(`c_feat_${i}`)?.value || '';
-      for (const lang of langs) {
-        const tDesc = await translateText(descEs, lang);
-        const tFeat = await translateLines(featEs, lang);
-        const dEl = document.getElementById(`c_desc_${lang}_${i}`);
-        const fEl = document.getElementById(`c_feat_${lang}_${i}`);
-        if (dEl) dEl.value = tDesc;
-        if (fEl) fEl.value = tFeat;
-      }
-    }
-
-    // ── Translate services ──
-    for (let i = 0; i < siteData.services.length; i++) {
-      const nameEs  = document.getElementById(`s_name_es_${i}`)?.value || '';
-      const descEs  = document.getElementById(`s_desc_es_${i}`)?.value || '';
-      const itemsEs = document.getElementById(`s_items_es_${i}`)?.value || '';
-
-      for (const lang of langs) {
-        const tName  = await translateText(nameEs, lang);
-        const tDesc  = await translateText(descEs, lang);
-        const tItems = await translateLines(itemsEs, lang);
-        const nEl = document.getElementById(`s_name_${lang}_${i}`);
-        const dEl = document.getElementById(`s_desc_${lang}_${i}`);
-        const iEl = document.getElementById(`s_items_${lang}_${i}`);
-        if (nEl) nEl.value = tName;
-        if (dEl) dEl.value = tDesc;
-        if (iEl) iEl.value = tItems;
-      }
-    }
-
-    msgs.forEach(m => { m.textContent = '✓ Traducción completa'; m.className = 'translate-msg ok'; });
-    setTimeout(() => msgs.forEach(m => { m.textContent = ''; m.className = 'translate-msg'; }), 4000);
-
-  } catch(e) {
-    msgs.forEach(m => { m.textContent = '✗ Error al traducir. Intentá de nuevo.'; m.className = 'translate-msg err'; });
-  }
-
-  btns.forEach(b => { b.disabled = false; b.textContent = '🌐 Traducir automáticamente'; });
-}
-
-// ══════════════════════════════════════════════
-//  SAVE
-// ══════════════════════════════════════════════
-async function saveAll() {
-  // Contact
-  siteData.wa = document.getElementById('adm_wa').value.trim();
-  siteData.email = document.getElementById('adm_email').value.trim();
-  siteData.address = document.getElementById('adm_address').value.trim();
-
-  // Campers
-  siteData.campers = siteData.campers.map((_,i) => ({
-    id: siteData.campers[i].id,
-    name: document.getElementById(`c_name_${i}`).value,
-    desc: {
-      es: document.getElementById(`c_desc_es_${i}`)?.value || '',
-      en: document.getElementById(`c_desc_en_${i}`)?.value || '',
-      fr: document.getElementById(`c_desc_fr_${i}`)?.value || '',
-      de: document.getElementById(`c_desc_de_${i}`)?.value || '',
-      pt: document.getElementById(`c_desc_pt_${i}`)?.value || '',
-    },
-    features: (document.getElementById(`c_feat_${i}`)?.value||'').split('\n').filter(f=>f.trim()),
-    media: (() => {
-      const ytUrls = (document.getElementById(`c_media_${i}`)?.value||'').split('\n').map(u=>u.trim()).filter(Boolean);
-      let b64Imgs = [];
-      try { b64Imgs = JSON.parse(document.getElementById(`c_b64_${i}`)?.value||'[]'); } catch(e){}
-      return [...b64Imgs, ...ytUrls];
-    })(),
-  }));
-
-  // Services
-  siteData.services = siteData.services.map((_,i) => ({
-    icon: siteData.services[i].icon,
-    name: { es: document.getElementById(`s_name_es_${i}`)?.value||'', en: document.getElementById(`s_name_en_${i}`)?.value||'', fr: document.getElementById(`s_name_fr_${i}`)?.value||'', de: document.getElementById(`s_name_de_${i}`)?.value||'', pt: document.getElementById(`s_name_pt_${i}`)?.value||'' },
-    desc: { es: document.getElementById(`s_desc_es_${i}`)?.value||'', en: document.getElementById(`s_desc_en_${i}`)?.value||'', fr: document.getElementById(`s_desc_fr_${i}`)?.value||'', de: document.getElementById(`s_desc_de_${i}`)?.value||'', pt: document.getElementById(`s_desc_pt_${i}`)?.value||'' },
-    items: { es: (document.getElementById(`s_items_es_${i}`)?.value||'').split('\n').filter(f=>f.trim()), en: (document.getElementById(`s_items_en_${i}`)?.value||'').split('\n').filter(f=>f.trim()), fr: (document.getElementById(`s_items_fr_${i}`)?.value||'').split('\n').filter(f=>f.trim()), de: (document.getElementById(`s_items_de_${i}`)?.value||'').split('\n').filter(f=>f.trim()), pt: (document.getElementById(`s_items_pt_${i}`)?.value||'').split('\n').filter(f=>f.trim()) }
-  }));
-
-  // Gallery
-  siteData.gallery = siteData.gallery.map((_,i) => document.getElementById(`g_url_${i}`).value.trim());
-
-  localStorage.setItem('acv_data', JSON.stringify(siteData)); // local backup
-  renderAll();
-
-  // Save to cloud
-  const saveBtns = document.querySelectorAll('.btn-save-all');
-  saveBtns.forEach(b => { b.disabled = true; b.textContent = '⏳ Guardando...'; });
-  try {
-    // Diagnose data size
-    const dataStr = JSON.stringify(siteData);
-    const dataSizeKB = Math.round(dataStr.length / 1024);
-    console.log('Saving data, size:', dataSizeKB + 'KB');
-    showDiag('Guardando... tamaño: ' + dataSizeKB + 'KB');
-    await saveToCloud(siteData);
-    showDiag('✅ Guardado OK (' + dataSizeKB + 'KB)', 'green');
-    ['saveMsg1','saveMsg2','saveMsg3','saveMsg4'].forEach(id=>{
-      const el = document.getElementById(id);
-      if(el){ el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),2500); }
-    });
-  } catch(e) {
-    showDiag('❌ Error: ' + e.message, 'red');
-    alert('⚠️ Error al guardar: ' + e.message);
-  }
-  saveBtns.forEach(b => { b.disabled = false; b.textContent = 'Guardar cambios'; });
-}
-
-function showDiag(msg, color) {
-  let box = document.getElementById('diagBox');
-  if (!box) {
-    box = document.createElement('div');
-    box.id = 'diagBox';
-    box.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:10px 16px;border-radius:6px;font-size:13px;z-index:9999;max-width:90vw;word-break:break-all;text-align:center';
-    document.body.appendChild(box);
-  }
-  box.textContent = msg;
-  box.style.borderBottom = '3px solid ' + (color || 'orange');
-  clearTimeout(box._t);
-  if (color === 'green') box._t = setTimeout(() => box.remove(), 4000);
-}
-
-// ══════════════════════════════════════════════
-//  KEYBOARD SHORTCUT → ADMIN
-//  Go to /admin → type "admin" in URL hash
-// ══════════════════════════════════════════════
-function checkHash() {
-  if(window.location.hash === '#admin') openAdmin();
-}
-window.addEventListener('hashchange', checkHash);
-checkHash();
-
-// ══════════════════════════════════════════════
-//  INIT
-// ══════════════════════════════════════════════
-document.addEventListener('DOMContentLoaded', async ()=>{
-  // Show loading state
-  document.getElementById('rentalGrid').innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-muted)">Cargando...</div>';
-  // Try cloud first
-  const cloudData = await loadFromCloud();
-  if (cloudData) {
-    siteData = cloudData;
-  } else {
-    const local = localStorage.getItem('acv_data');
-    if (local) siteData = JSON.parse(local);
-  }
-  // Load saved design
-  try {
-    const savedDesign = await fbGet('/design');
-    if (savedDesign) {
-      currentDesign = savedDesign;
-      applyDesignToPage(savedDesign);
-    }
-  } catch(e) { /* no design saved yet */ }
-  // Load texts, config, sections from Firebase
-  try {
-    const [savedTexts, savedConfig, savedOrder, savedCustom] = await Promise.all([
-      fbGet('/texts'),
-      fbGet('/config'),
-      fbGet('/sectionOrder'),
-      fbGet('/customSections')
-    ]);
-    if (savedTexts) siteData.texts = savedTexts;
-    if (savedConfig) {
-      if (savedConfig.companyName) siteData.companyName = savedConfig.companyName;
-      if (savedConfig.instagramUrl) siteData.instagramUrl = savedConfig.instagramUrl;
-      if (savedConfig.fbUrl) { siteData.fbUrl = savedConfig.fbUrl; FB_URL = savedConfig.fbUrl; }
-    }
-    // Load fixed section custom names
-    const savedFixedNames = await fbGet('/fixedSectionNames');
-    if (savedFixedNames) {
-      FIXED_SECTIONS.forEach(f => {
-        if (savedFixedNames[f.id]) f.names = { ...f.names, ...savedFixedNames[f.id] };
+// Drag & drop for order chips within a sequence
+function initOrderDrag(sectionId) {
+  document.querySelectorAll('.seq-admin-card[data-section="' + sectionId + '"] .seq-order-row').forEach(row => {
+    const chips = row.querySelectorAll('.seq-order-chip');
+    let dragChip = null;
+    chips.forEach(chip => {
+      chip.addEventListener('dragstart', e => { dragChip = chip; e.stopPropagation(); setTimeout(()=>chip.style.opacity='.4',0); });
+      chip.addEventListener('dragend',   () => chip.style.opacity='1');
+      chip.addEventListener('dragover',  e => { e.preventDefault(); e.stopPropagation(); chip.classList.add('drag-over'); });
+      chip.addEventListener('dragleave', () => chip.classList.remove('drag-over'));
+      chip.addEventListener('drop', e => {
+        e.preventDefault(); e.stopPropagation(); chip.classList.remove('drag-over');
+        if (!dragChip || dragChip === chip) return;
+        const parent = chip.parentNode;
+        const chipsArr = Array.from(parent.querySelectorAll('.seq-order-chip'));
+        const si2 = chipsArr.indexOf(dragChip);
+        const ti2 = chipsArr.indexOf(chip);
+        if (si2 < ti2) parent.insertBefore(dragChip, chip.nextSibling);
+        else parent.insertBefore(dragChip, chip);
       });
-    }
-    if (savedOrder) siteData.sectionOrder = savedOrder;
-    if (savedCustom) siteData.customSections = Array.isArray(savedCustom) ? savedCustom : [];
-    else siteData.customSections = [];
-    mergeTextsIntoI18n();
-    renderCustomSections();
-    renderNavSections();
-  } catch(e) { /* no extra data saved yet */ }
-  mergeTextsIntoI18n();
-  setLang('es');
-  initReveal();
-});
-// Login on Enter
-document.addEventListener('keydown', e=>{
-  if(e.key==='Enter' && document.getElementById('admin-overlay').classList.contains('visible'))
-    doLogin();
-});
-</script>
-
-<!-- FLOATING CONTACT BUTTONS -->
-<div class="float-stack" id="floatStack">
-  <a id="floatWa" class="float-btn float-wa" href="#" target="_blank" title="WhatsApp"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.999 2C6.478 2 2 6.478 2 12c0 1.82.487 3.53 1.338 5.01L2 22l5.143-1.325C8.56 21.536 10.228 22 12 22c5.522 0 10-4.478 10-10S17.521 2 11.999 2zm.001 18c-1.634 0-3.17-.457-4.489-1.248l-.322-.191-3.054.786.812-2.97-.209-.34C3.459 14.93 3 13.519 3 12c0-4.97 4.03-9 9-9s9 4.03 9 9-4.029 9-9 9z"/></svg></a>
-  <a id="floatMail" class="float-btn float-mail" href="#" title="Email"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="white"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></a>
-  <a class="float-btn float-ig" href="https://www.instagram.com/ancarvancamper" target="_blank" title="Instagram"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="white">
-  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-</svg></a>
-</div>
+    });
+  });
+}
 
 
-<!-- PWA INSTALL BANNER -->
-<div id="pwa-banner" class="hidden">
-  <img class="pwa-logo" id="pwaBannerLogo" src="" alt="Ancarvancamper">
-  <div class="pwa-text">
-    <strong>Agregá a tu pantalla de inicio</strong>
-    <span>Accedé rápido a Ancarvancamper</span>
-  </div>
-  <div class="pwa-actions">
-    <button class="pwa-install" id="pwaInstallBtn">Instalar</button>
-    <button class="pwa-dismiss" id="pwaDismissBtn">Ahora no</button>
-  </div>
-</div>
-
-
-<!-- iOS INSTALL MODAL -->
-<div id="ios-modal" style="display:none;position:fixed;inset:0;z-index:400;background:rgba(0,0,0,.6);align-items:flex-end;justify-content:center">
-  <div style="background:var(--white);border-radius:16px 16px 0 0;padding:2rem 1.5rem;width:100%;max-width:480px;margin:0 auto">
-    <div style="text-align:center;margin-bottom:1.5rem">
-      <div style="font-size:2rem;margin-bottom:.5rem">📲</div>
-      <div style="font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:var(--dark);margin-bottom:.5rem">Agregar a pantalla de inicio</div>
-      <div style="font-size:.85rem;color:var(--text-muted);line-height:1.6">Para crear el acceso directo en tu iPhone:</div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:.8rem;margin-bottom:1.5rem">
-      <div style="display:flex;align-items:center;gap:1rem;background:var(--cream);padding:.8rem 1rem;border-radius:8px">
-        <span style="font-size:1.4rem;flex-shrink:0">1️⃣</span>
-        <span style="font-size:.85rem;color:var(--charcoal)">Tocá el botón <strong>Compartir</strong> <span style="font-size:1.1rem">⬆️</span> en la barra inferior de Safari</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:1rem;background:var(--cream);padding:.8rem 1rem;border-radius:8px">
-        <span style="font-size:1.4rem;flex-shrink:0">2️⃣</span>
-        <span style="font-size:.85rem;color:var(--charcoal)">Buscá y tocá <strong>"Añadir a pantalla de inicio"</strong></span>
-      </div>
-      <div style="display:flex;align-items:center;gap:1rem;background:var(--cream);padding:.8rem 1rem;border-radius:8px">
-        <span style="font-size:1.4rem;flex-shrink:0">3️⃣</span>
-        <span style="font-size:.85rem;color:var(--charcoal)">Tocá <strong>Añadir</strong> arriba a la derecha</span>
-      </div>
-    </div>
-    <button onclick="document.getElementById('ios-modal').style.display='none'" style="width:100%;background:var(--dark);color:var(--white);border:none;padding:.85rem;border-radius:8px;font-family:var(--font-body);font-size:.9rem;font-weight:500;cursor:pointer">Entendido</button>
-  </div>
-</div>
-
-</body>
-</html>
