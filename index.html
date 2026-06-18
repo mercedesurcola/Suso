@@ -248,10 +248,10 @@
         el.id = `sec-${id}`;
 
         // Videos HTML — thumbnail clicable, abre en YouTube
-        const videosHTML = (sec.videos || []).map(url => {
+        const videos = (sec.videos || []).filter(url => youtubeId(url));
+        const videosHTML = videos.map((url, idx) => {
           const id = youtubeId(url);
-          if (!id) return "";
-          return `<a class="video-thumb" href="${youtubeURL(url)}" target="_blank" rel="noopener" aria-label="Ver en YouTube">
+          return `<a class="carousel-item" data-idx="${idx}" href="${youtubeURL(url)}" target="_blank" rel="noopener" aria-label="Ver en YouTube">
             <img src="${youtubeThumb(id)}" alt="Video" loading="lazy" />
             <span class="play-btn">
               <svg viewBox="0 0 68 48" width="68" height="48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55c-2.93.78-4.63 3.26-5.42 6.19C.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#ff0000"/><path d="M45 24 27 14v20" fill="#fff"/></svg>
@@ -260,9 +260,15 @@
         }).join("");
 
         // Imágenes HTML
-        const imagenesHTML = (sec.imagenes || []).map(url =>
-          `<div class="img-item"><img src="${url}" alt="" loading="lazy" /></div>`
+        const imagenes = (sec.imagenes || []);
+        const imagenesHTML = imagenes.map((url, idx) =>
+          `<div class="carousel-item" data-idx="${idx}"><img src="${url}" alt="" loading="lazy" /></div>`
         ).join("");
+
+        // Combinar imágenes y videos en un solo carousel
+        const allMedia = imagenesHTML + videosHTML;
+        const totalMedia = imagenes.length + videos.length;
+        const hasMultiple = totalMedia > 1;
 
         el.innerHTML = `
           <div class="sec-inner">
@@ -272,12 +278,57 @@
               <p class="sec-subtitulo">${esc(sec.subtitulo)}</p>
               <p class="sec-body">${esc(sec.texto)}</p>
             </div>
-            ${imagenesHTML || videosHTML ? `<div class="sec-media">
-              ${imagenesHTML ? `<div class="img-grid">${imagenesHTML}</div>` : ""}
-              ${videosHTML ? `<div class="videos-grid">${videosHTML}</div>` : ""}
+            ${allMedia ? `<div class="sec-media">
+              <div class="carousel-container">
+                <div class="carousel-track">${allMedia}</div>
+                ${hasMultiple ? `
+                  <button class="carousel-nav carousel-prev" aria-label="Anterior">‹</button>
+                  <button class="carousel-nav carousel-next" aria-label="Siguiente">›</button>
+                  <div class="carousel-dots">
+                    ${Array.from({length: totalMedia}, (_, i) => 
+                      `<button class="dot ${i === 0 ? 'active' : ''}" data-slide="${i}" aria-label="Ir a slide ${i+1}"></button>`
+                    ).join('')}
+                  </div>
+                ` : ''}
+              </div>
             </div>` : ""}
           </div>`;
         secContainer.appendChild(el);
+
+        // Carousel control
+        if (hasMultiple) {
+          const track = el.querySelector(".carousel-track");
+          const prevBtn = el.querySelector(".carousel-prev");
+          const nextBtn = el.querySelector(".carousel-next");
+          const dots = el.querySelectorAll(".dot");
+          let currentSlide = 0;
+
+          function goToSlide(idx) {
+            currentSlide = idx % totalMedia;
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+            dots.forEach((d, i) => d.classList.toggle("active", i === currentSlide));
+          }
+
+          prevBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            goToSlide(currentSlide - 1 + totalMedia);
+          });
+
+          nextBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            goToSlide(currentSlide + 1);
+          });
+
+          dots.forEach(dot => {
+            dot.addEventListener("click", () => goToSlide(parseInt(dot.dataset.slide)));
+          });
+
+          // Keyboard support
+          el.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowLeft") prevBtn.click();
+            if (e.key === "ArrowRight") nextBtn.click();
+          });
+        }
       });
 
       // Contacto
@@ -1006,38 +1057,42 @@
       line-height: 1.8;
     }
 
-    .img-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 12px;
+    /* ═══════════════════════════════════════
+       CAROUSEL / SLIDER
+    ═══════════════════════════════════════ */
+    .carousel-container {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--bg);
     }
 
-    .img-item img {
-      width: 100%; border-radius: var(--radius);
-      aspect-ratio: 4/3; object-fit: cover;
-      border: 1px solid var(--border);
+    .carousel-track {
+      display: flex;
+      transition: transform 0.35s ease;
     }
 
-    .videos-grid { display: flex; flex-direction: column; gap: 12px; }
-
-    .video-thumb {
-      display: block; position: relative;
-      border-radius: var(--radius); overflow: hidden;
-      border: 1px solid var(--border);
+    .carousel-item {
+      min-width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       aspect-ratio: 16/9;
       background: #000;
+      position: relative;
       text-decoration: none;
     }
 
-    .video-thumb img {
+    .carousel-item img {
       width: 100%; height: 100%;
       object-fit: cover; display: block;
       transition: transform 0.3s ease, opacity 0.3s ease;
     }
 
-    .video-thumb:hover img {
-      transform: scale(1.03);
-      opacity: 0.85;
+    .carousel-item:hover img {
+      transform: scale(1.02);
+      opacity: 0.95;
     }
 
     .play-btn {
@@ -1051,9 +1106,38 @@
       transition: transform 0.2s ease;
     }
 
-    .video-thumb:hover .play-btn svg {
+    .carousel-item:hover .play-btn svg {
       transform: scale(1.12);
     }
+
+    .carousel-nav {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      background: rgba(0,0,0,0.5); border: none; color: #fff;
+      width: 44px; height: 44px; border-radius: 50%;
+      font-size: 1.4rem; cursor: pointer; z-index: 10;
+      transition: background 0.2s ease;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .carousel-nav:hover { background: rgba(0,0,0,0.75); }
+
+    .carousel-prev { left: 12px; }
+    .carousel-next { right: 12px; }
+
+    .carousel-dots {
+      position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 8px; z-index: 10;
+    }
+
+    .dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: rgba(255,255,255,0.4); border: none; cursor: pointer;
+      transition: background 0.2s ease;
+      padding: 0;
+    }
+
+    .dot:hover { background: rgba(255,255,255,0.6); }
+    .dot.active { background: rgba(255,255,255,0.95); }
 
     /* ═══════════════════════════════════════
        CONTACTO
