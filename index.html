@@ -13,8 +13,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getDatabase, ref, set, get, onValue }
       from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-    import { getStorage, ref as sRef, uploadBytes, getDownloadURL }
-      from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
     // ── ▼ EDITAR ESTOS DATOS ▼ ──────────────────────────────────
     const firebaseConfig = {
@@ -35,13 +33,17 @@
 
     const app     = initializeApp(firebaseConfig);
     const db      = getDatabase(app);
-    const storage = getStorage(app);
 
     // ── Datos por defecto ────────────────────────────────────────
     const DEFAULT_DATA = {
       empresa: {
         nombre: "Mi Empresa",
         logo:   ""
+      },
+      portada: {
+        eyebrow:  "Bienvenidos",
+        titulo:   "Construimos\nexperiencias digitales",
+        subtitulo: "Explorá nuestro trabajo y conocé todo lo que podemos hacer por vos."
       },
       secciones: {
         s1: {
@@ -76,7 +78,8 @@
         email:     "info@miempresa.com",
         telefono:  "+54 11 0000-0000",
         direccion: "Ciudad, País",
-        whatsapp:  ""
+        whatsapp:  "",
+        instagram: ""
       },
       diseno: {
         colores: {
@@ -102,35 +105,36 @@
       }
     };
 
-    // ── Utilidad: resize de imagen en canvas ─────────────────────
-    async function resizeImage(file, maxW = 1200, maxH = 1200, quality = 0.82) {
+    // ── Convertir imagen a base64 (sin Storage, directo a Database) ────
+    async function imageToBase64(file) {
       return new Promise((resolve) => {
         const reader = new FileReader();
         reader.onload = (e) => {
           const img = new Image();
           img.onload = () => {
-            let { width, height } = img;
-            const ratio = Math.min(maxW / width, maxH / height, 1);
-            width  = Math.round(width  * ratio);
-            height = Math.round(height * ratio);
             const canvas = document.createElement("canvas");
-            canvas.width  = width;
-            canvas.height = height;
-            canvas.getContext("2d").drawImage(img, 0, 0, width, height);
-            canvas.toBlob(resolve, "image/webp", quality);
+            let w = img.width, h = img.height;
+            
+            if (w > 800 || h > 800) {
+              if (w > h) { h = Math.round(h * 800 / w); w = 800; }
+              else       { w = Math.round(w * 800 / h); h = 800; }
+            }
+            
+            canvas.width  = w;
+            canvas.height = h;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, w, h);
+            
+            // Convertir a data URL base64 (JPEG)
+            const b64 = canvas.toDataURL("image/jpeg", 0.65);
+            const sizeKB = Math.round(b64.length * 0.75 / 1024);
+            console.log(`Imagen comprimida: ${sizeKB}KB (${w}x${h})`);
+            resolve(b64);
           };
           img.src = e.target.result;
         };
         reader.readAsDataURL(file);
       });
-    }
-
-    // ── Subir imagen a Storage ───────────────────────────────────
-    async function uploadImage(file, path) {
-      const blob = await resizeImage(file);
-      const storRef = sRef(storage, path);
-      await uploadBytes(storRef, blob, { contentType: "image/webp" });
-      return await getDownloadURL(storRef);
     }
 
     // ── Cargar datos de Firebase (o defaults si no existen) ──────
@@ -214,7 +218,7 @@
 
     // ── Render del sitio público ─────────────────────────────────
     function renderSite(data) {
-      const { empresa, secciones, contacto } = data;
+      const { empresa, portada, secciones, contacto } = data;
       applyDiseno(data.diseno);
 
       // Navbar
@@ -227,6 +231,12 @@
       // Título de página
       document.title = empresa.nombre;
 
+      // Portada / Hero
+      const p = portada || {};
+      document.getElementById("hero-eyebrow").textContent  = p.eyebrow  || "";
+      document.getElementById("hero-titulo").innerHTML     = esc(p.titulo || "").replace(/\n/g, "<br/>");
+      document.getElementById("hero-desc").textContent     = p.subtitulo || "";
+
       // Secciones
       const secContainer = document.getElementById("secciones-container");
       secContainer.innerHTML = "";
@@ -237,10 +247,16 @@
         el.className = "seccion";
         el.id = `sec-${id}`;
 
-        // Videos HTML
+        // Videos HTML — thumbnail clicable, abre en YouTube
         const videosHTML = (sec.videos || []).map(url => {
-          const vid = youtubeEmbed(url);
-          return vid ? `<div class="video-wrapper"><iframe src="${vid}" frameborder="0" allowfullscreen></iframe></div>` : "";
+          const id = youtubeId(url);
+          if (!id) return "";
+          return `<a class="video-thumb" href="${youtubeURL(url)}" target="_blank" rel="noopener" aria-label="Ver en YouTube">
+            <img src="${youtubeThumb(id)}" alt="Video" loading="lazy" />
+            <span class="play-btn">
+              <svg viewBox="0 0 68 48" width="68" height="48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55c-2.93.78-4.63 3.26-5.42 6.19C.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#ff0000"/><path d="M45 24 27 14v20" fill="#fff"/></svg>
+            </span>
+          </a>`;
         }).join("");
 
         // Imágenes HTML
@@ -268,16 +284,43 @@
       document.getElementById("contacto-titulo").textContent    = contacto.titulo;
       document.getElementById("contacto-subtitulo").textContent = contacto.subtitulo;
       document.getElementById("contacto-texto").textContent     = contacto.texto;
-      document.getElementById("contacto-email").textContent     = contacto.email;
-      document.getElementById("contacto-email").href            = `mailto:${contacto.email}`;
-      document.getElementById("contacto-tel").textContent       = contacto.telefono;
-      document.getElementById("contacto-dir").textContent       = contacto.direccion;
 
-      const wa = document.getElementById("contacto-wa");
-      if (contacto.whatsapp) {
-        wa.href        = `https://wa.me/${contacto.whatsapp.replace(/\D/g,"")}`;
-        wa.style.display = "inline-flex";
+      // Email
+      const elEmail = document.getElementById("contacto-email");
+      elEmail.textContent = contacto.email;
+      elEmail.href        = `mailto:${contacto.email}`;
+
+      // Teléfono (link tel:)
+      const elTel = document.getElementById("contacto-tel");
+      elTel.textContent = contacto.telefono;
+      elTel.href        = `tel:${contacto.telefono.replace(/\s/g,"")}`;
+
+      // Dirección (texto plano)
+      document.getElementById("contacto-dir").textContent = contacto.direccion;
+
+      // Instagram
+      const elIg = document.getElementById("contacto-ig");
+      if (contacto.instagram) {
+        const igHandle = contacto.instagram.replace(/^@/,"").replace(/.*instagram\.com\//,"");
+        elIg.textContent = `@${igHandle}`;
+        elIg.href        = `https://www.instagram.com/${igHandle}`;
+        elIg.closest(".contacto-item").style.display = "flex";
+      } else {
+        elIg.closest(".contacto-item").style.display = "none";
       }
+
+      // WhatsApp — botón en contacto + botón flotante
+      const waNum = (contacto.whatsapp || "").replace(/\D/g,"");
+      const waUrl = waNum ? `https://wa.me/${waNum}?text=${encodeURIComponent("Hola")}` : "#";
+      const waVisible = !!waNum;
+
+      const elWaContact = document.getElementById("contacto-wa");
+      elWaContact.href = waUrl;
+      elWaContact.style.display = waVisible ? "inline-flex" : "none";
+
+      const elWaFloat = document.getElementById("wa-float");
+      elWaFloat.href = waUrl;
+      elWaFloat.style.display = waVisible ? "flex" : "none";
 
       // Nav links
       const navLinks = document.getElementById("nav-links");
@@ -295,9 +338,19 @@
     }
 
     // ── Extraer ID de YouTube ────────────────────────────────────
-    function youtubeEmbed(url) {
+    function youtubeId(url) {
       const match = url.match(/(?:v=|youtu\.be\/|embed\/)([a-zA-Z0-9_-]{11})/);
-      return match ? `https://www.youtube.com/embed/${match[1]}` : null;
+      return match ? match[1] : null;
+    }
+
+    function youtubeThumb(id) {
+      // maxresdefault puede no existir en videos viejos, hqdefault siempre existe
+      return `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+    }
+
+    function youtubeURL(url) {
+      const id = youtubeId(url);
+      return id ? `https://www.youtube.com/watch?v=${id}` : url;
     }
 
     function esc(str) {
@@ -322,6 +375,12 @@
         document.getElementById("logo-preview").style.display = "block";
       }
 
+      // Portada
+      const p = data.portada || {};
+      document.getElementById("a-p-eyebrow").value  = p.eyebrow  || "";
+      document.getElementById("a-p-titulo").value   = p.titulo   || "";
+      document.getElementById("a-p-subtitulo").value= p.subtitulo|| "";
+
       // Secciones
       renderAdminSecciones();
 
@@ -333,7 +392,8 @@
       document.getElementById("a-c-email").value     = c.email;
       document.getElementById("a-c-tel").value       = c.telefono;
       document.getElementById("a-c-dir").value       = c.direccion;
-      document.getElementById("a-c-wa").value        = c.whatsapp || "";
+      document.getElementById("a-c-wa").value        = c.whatsapp  || "";
+      document.getElementById("a-c-ig").value        = c.instagram || "";
 
       // Diseño
       buildAdminDiseno(data.diseno);
@@ -514,15 +574,14 @@
         input.addEventListener("change", async e => {
           const secId = e.target.dataset.sec;
           const files = Array.from(e.target.files);
-          showToast("Subiendo imágenes…", "info");
+          showToast("Comprimiendo imágenes…", "info");
           for (const file of files) {
-            const path = `sitio/secciones/${secId}/${Date.now()}_${file.name.replace(/\s/g,"_")}`;
-            const url = await uploadImage(file, path);
+            const b64 = await imageToBase64(file);
             if (!siteData.secciones[secId].imagenes) siteData.secciones[secId].imagenes = [];
-            siteData.secciones[secId].imagenes.push(url);
+            siteData.secciones[secId].imagenes.push(b64);
           }
           renderAdminSecciones();
-          showToast("Imágenes subidas ✓", "ok");
+          showToast("Imágenes guardadas ✓", "ok");
         });
       });
 
@@ -579,6 +638,13 @@
       const data = await loadData();
       renderSite(data);
 
+      // Revelar sitio, ocultar loader
+      const loader  = document.getElementById("site-loader");
+      const content = document.getElementById("site-content");
+      loader.classList.add("hidden");
+      content.classList.add("ready");
+      setTimeout(() => loader.remove(), 400);
+
       // ── Login admin ──────────────────────────────────────────────
       document.getElementById("btn-login").addEventListener("click", () => {
         const u = document.getElementById("login-user").value.trim();
@@ -614,10 +680,10 @@
       document.getElementById("logo-upload").addEventListener("change", async e => {
         const file = e.target.files[0];
         if (!file) return;
-        showToast("Subiendo logo…", "info");
-        const url = await uploadImage(file, "sitio/empresa/logo.webp", 400, 400);
-        siteData.empresa.logo = url;
-        document.getElementById("logo-preview").src = url;
+        showToast("Comprimiendo logo…", "info");
+        const b64 = await imageToBase64(file);
+        siteData.empresa.logo = b64;
+        document.getElementById("logo-preview").src = b64;
         document.getElementById("logo-preview").style.display = "block";
         showToast("Logo actualizado ✓");
       });
@@ -625,6 +691,20 @@
       // Nombre empresa
       document.getElementById("a-nombre").addEventListener("input", e => {
         siteData.empresa.nombre = e.target.value;
+      });
+
+      // Portada live preview
+      ["a-p-eyebrow","a-p-titulo","a-p-subtitulo"].forEach(id => {
+        document.getElementById(id).addEventListener("input", e => {
+          if (!siteData.portada) siteData.portada = {};
+          const map = { "a-p-eyebrow":"eyebrow", "a-p-titulo":"titulo", "a-p-subtitulo":"subtitulo" };
+          siteData.portada[map[id]] = e.target.value;
+          // preview inmediato en hero
+          const p = siteData.portada;
+          document.getElementById("hero-eyebrow").textContent = p.eyebrow || "";
+          document.getElementById("hero-titulo").innerHTML    = esc(p.titulo||"").replace(/\n/g,"<br/>");
+          document.getElementById("hero-desc").textContent    = p.subtitulo || "";
+        });
       });
 
       // Agregar sección
@@ -643,10 +723,11 @@
       });
 
       // Contacto fields
-      ["titulo","subtitulo","texto","email","tel","dir","wa"].forEach(f => {
+      ["titulo","subtitulo","texto","email","tel","dir","wa","ig"].forEach(f => {
         document.getElementById(`a-c-${f}`).addEventListener("input", e => {
           const map = { titulo:"titulo", subtitulo:"subtitulo", texto:"texto",
-                        email:"email", tel:"telefono", dir:"direccion", wa:"whatsapp" };
+                        email:"email", tel:"telefono", dir:"direccion",
+                        wa:"whatsapp", ig:"instagram" };
           siteData.contacto[map[f]] = e.target.value;
         });
       });
@@ -937,16 +1018,41 @@
       border: 1px solid var(--border);
     }
 
-    .videos-grid { display: flex; flex-direction: column; gap: 16px; }
+    .videos-grid { display: flex; flex-direction: column; gap: 12px; }
 
-    .video-wrapper {
-      position: relative; padding-bottom: 56.25%; height: 0;
+    .video-thumb {
+      display: block; position: relative;
       border-radius: var(--radius); overflow: hidden;
       border: 1px solid var(--border);
+      aspect-ratio: 16/9;
+      background: #000;
+      text-decoration: none;
     }
 
-    .video-wrapper iframe {
-      position: absolute; inset: 0; width: 100%; height: 100%;
+    .video-thumb img {
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .video-thumb:hover img {
+      transform: scale(1.03);
+      opacity: 0.85;
+    }
+
+    .play-btn {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none;
+    }
+
+    .play-btn svg {
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.6));
+      transition: transform 0.2s ease;
+    }
+
+    .video-thumb:hover .play-btn svg {
+      transform: scale(1.12);
     }
 
     /* ═══════════════════════════════════════
@@ -986,8 +1092,39 @@
       font-size: 0.9rem; flex-shrink: 0;
     }
 
-    .contacto-item a { color: var(--text); text-decoration: none; }
+    .contacto-item a {
+      color: var(--text); text-decoration: none;
+      transition: color var(--transition);
+    }
     .contacto-item a:hover { color: var(--gold); }
+
+    /* ── WhatsApp flotante ── */
+    #wa-float {
+      position: fixed; bottom: 1.8rem; right: 1.8rem; z-index: 150;
+      width: 56px; height: 56px; border-radius: 50%;
+      background: #25D366;
+      color: #fff;
+      align-items: center; justify-content: center;
+      box-shadow: 0 4px 20px rgba(37,211,102,0.4);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      text-decoration: none;
+    }
+    #wa-float:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 28px rgba(37,211,102,0.55);
+    }
+    /* Pulso sutil */
+    #wa-float::before {
+      content: "";
+      position: absolute; inset: 0; border-radius: 50%;
+      background: rgba(37,211,102,0.35);
+      animation: waPulse 2.4s ease-out infinite;
+    }
+    @keyframes waPulse {
+      0%   { transform: scale(1);   opacity: 0.7; }
+      70%  { transform: scale(1.6); opacity: 0; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
 
     #contacto-wa {
       display: none; align-items: center; gap: 8px;
@@ -1519,8 +1656,36 @@
   </style>
   <!-- Estilo dinámico: secciones alternas -->
   <style id="style-alternas">.seccion:nth-child(even) { background: var(--surface); }</style>
+  <style>
+    /* Ocultar sitio hasta que Firebase cargue */
+    #site-content { opacity: 0; transition: opacity 0.35s ease; }
+    #site-content.ready { opacity: 1; }
+
+    #site-loader {
+      position: fixed; inset: 0; z-index: 9999;
+      background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      transition: opacity 0.35s ease;
+    }
+    #site-loader.hidden { opacity: 0; pointer-events: none; }
+
+    .loader-ring {
+      width: 36px; height: 36px;
+      border: 2px solid var(--border);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
 </head>
 <body>
+
+  <!-- Loader inicial -->
+  <div id="site-loader"><div class="loader-ring"></div></div>
+
+  <!-- Contenido del sitio (oculto hasta que Firebase responda) -->
+  <div id="site-content">
 
   <!-- ═══════════════ NAVBAR ═══════════════ -->
   <nav id="navbar">
@@ -1538,7 +1703,7 @@
   <!-- ═══════════════ HERO ═══════════════ -->
   <section id="hero">
     <div class="hero-inner">
-      <span class="hero-eyebrow">Bienvenidos</span>
+      <span class="hero-eyebrow" id="hero-eyebrow">Bienvenidos</span>
       <h1 id="hero-titulo">Construimos<br/>experiencias digitales</h1>
       <p id="hero-desc">Explorá nuestro trabajo y conocé todo lo que podemos hacer por vos.</p>
       <div class="hero-scroll">
@@ -1559,24 +1724,45 @@
         <p class="sec-subtitulo" id="contacto-subtitulo">Estamos para ayudarte</p>
         <p id="contacto-texto">Completá el formulario y nos comunicamos a la brevedad.</p>
         <div class="contacto-links">
+
+          <!-- Email -->
           <div class="contacto-item">
-            <span class="icon">✉</span>
-            <a href="#" id="contacto-email">info@miempresa.com</a>
+            <span class="icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            </span>
+            <a href="#" id="contacto-email" target="_blank" rel="noopener">info@miempresa.com</a>
           </div>
+
+          <!-- Teléfono -->
           <div class="contacto-item">
-            <span class="icon">☎</span>
-            <span id="contacto-tel">+54 11 0000-0000</span>
+            <span class="icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.18 6.18l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </span>
+            <a href="#" id="contacto-tel">+54 11 0000-0000</a>
           </div>
+
+          <!-- Dirección -->
           <div class="contacto-item">
-            <span class="icon">⌖</span>
+            <span class="icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+            </span>
             <span id="contacto-dir">Ciudad, País</span>
           </div>
-          <a id="contacto-wa" href="#">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
-            </svg>
+
+          <!-- Instagram -->
+          <div class="contacto-item" style="display:none">
+            <span class="icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </span>
+            <a href="#" id="contacto-ig" target="_blank" rel="noopener">@usuario</a>
+          </div>
+
+          <!-- WhatsApp (en sección contacto) -->
+          <a id="contacto-wa" href="#" target="_blank" rel="noopener" style="display:none">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
             WhatsApp
           </a>
+
         </div>
       </div>
       <div>
@@ -1603,6 +1789,11 @@
   <footer>
     <span id="footer-nombre">Mi Empresa</span> · Todos los derechos reservados
   </footer>
+
+  <!-- ═══════════════ WHATSAPP FLOTANTE ═══════════════ -->
+  <a id="wa-float" href="#" target="_blank" rel="noopener" aria-label="Contactar por WhatsApp" style="display:none">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+  </a>
 
   <!-- ═══════════════ MODAL LOGIN ═══════════════ -->
   <div id="login-modal">
@@ -1651,6 +1842,20 @@
           </div>
         </div>
 
+        <!-- Portada -->
+        <div>
+          <p class="admin-section-title">Portada</p>
+          <div class="admin-block">
+            <label>Texto pequeño (eyebrow)</label>
+            <input id="a-p-eyebrow" type="text" placeholder="ej: Bienvenidos" />
+            <label>Título principal</label>
+            <textarea id="a-p-titulo" rows="3" placeholder="ej: Construimos&#10;experiencias digitales" style="resize:vertical;"></textarea>
+            <p style="font-size:0.72rem;color:var(--muted);margin-top:-4px;">Usá Enter para saltos de línea en el título.</p>
+            <label>Subtítulo / descripción</label>
+            <textarea id="a-p-subtitulo" rows="3" placeholder="Descripción breve de la empresa o propuesta de valor."></textarea>
+          </div>
+        </div>
+
         <!-- Secciones -->
         <div>
           <p class="admin-section-title">Secciones</p>
@@ -1676,6 +1881,8 @@
             <input id="a-c-dir" type="text" />
             <label>WhatsApp (número con código de país, ej: 5491100000000)</label>
             <input id="a-c-wa" type="tel" placeholder="5491100000000" />
+            <label>Instagram (usuario o URL del perfil)</label>
+            <input id="a-c-ig" type="text" placeholder="@usuario o https://instagram.com/usuario" />
           </div>
         </div>
 
@@ -1846,6 +2053,8 @@
 
   <!-- Toast de notificaciones -->
   <div id="toast" class="toast"></div>
+
+</div><!-- /site-content -->
 
 </body>
 </html>
