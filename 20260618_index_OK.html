@@ -102,8 +102,7 @@
         },
         secciones: {
           alternas: true      // fondo alterno en secciones pares
-        },
-        ecommerce: false      // muestra botón hacia ecommerce.html
+        }
       }
     };
 
@@ -385,13 +384,6 @@
       ac.href = "#contacto";
       ac.textContent = contacto.titulo;
       navLinks.appendChild(ac);
-
-      // Botón e-commerce
-      const tieneEcom = data.diseno?.ecommerce === true;
-      const btnEcomNav  = document.getElementById("btn-ecommerce-nav");
-      const btnEcomHero = document.getElementById("btn-ecommerce-hero");
-      if (btnEcomNav)  btnEcomNav.style.display  = tieneEcom ? "inline-flex" : "none";
-      if (btnEcomHero) btnEcomHero.style.display = tieneEcom ? "inline-block" : "none";
     }
 
     // ── Extraer ID de YouTube ────────────────────────────────────
@@ -498,10 +490,6 @@
       // Alternas
       const chk = document.getElementById("ad-alternas");
       if (chk) chk.checked = d.secciones?.alternas !== false;
-
-      // E-commerce
-      const chkEc = document.getElementById("ad-ecommerce");
-      if (chkEc) chkEc.checked = d.ecommerce === true;
     }
 
     function syncColorHex(input) {
@@ -568,8 +556,7 @@
         },
         secciones: {
           alternas: document.getElementById("ad-alternas")?.checked !== false
-        },
-        ecommerce: document.getElementById("ad-ecommerce")?.checked === true
+        }
       };
     }
 
@@ -852,13 +839,6 @@
 
       document.addEventListener("change", e => {
         if (e.target.id === "ad-alternas") applyDiseno(collectDiseno());
-        if (e.target.id === "ad-ecommerce") {
-          const tieneEcom = e.target.checked;
-          const btnN = document.getElementById("btn-ecommerce-nav");
-          const btnH = document.getElementById("btn-ecommerce-hero");
-          if (btnN) btnN.style.display = tieneEcom ? "inline-flex" : "none";
-          if (btnH) btnH.style.display = tieneEcom ? "inline-block" : "none";
-        }
         if (e.target.name === "btn-estilo") { updateBtnPreview(); applyDiseno(collectDiseno()); }
         if (e.target.id === "ad-font-display" || e.target.id === "ad-font-body") {
           updateFontPreview(); applyDiseno(collectDiseno());
@@ -1576,28 +1556,8 @@
     /* ═══════════════════════════════════════
        RESPONSIVE
     ═══════════════════════════════════════ */
-    /* Botón e-commerce navbar */
-    #btn-ecommerce-nav {
-      background: var(--gold); color: var(--bg);
-      border: none; border-radius: var(--radius);
-      padding: 7px 16px; font-size: 0.8rem; font-weight: 600;
-      text-decoration: none; letter-spacing: 0.03em;
-      transition: opacity var(--transition); white-space: nowrap;
-    }
-    #btn-ecommerce-nav:hover { opacity: 0.85; }
-
-    /* Botón e-commerce hero */
-    .btn-ecommerce-hero {
-      display: inline-block;
-      background: var(--btn-bg); color: var(--btn-color);
-      border: 2px solid var(--btn-border); border-radius: var(--radius);
-      padding: 12px 28px; font-weight: 600; font-size: 0.95rem;
-      text-decoration: none; margin-bottom: 2.4rem;
-      transition: all var(--transition);
-    }
-    .btn-ecommerce-hero:hover { background: var(--btn-hover-bg); color: var(--btn-hover-color); opacity: 0.9; }
-
-  
+    @media (max-width: 768px) {
+      #nav-links {
         display: none; position: absolute; top: 64px; left: 0; right: 0;
         background: rgba(15,15,15,0.98); flex-direction: column;
         padding: 1.5rem 2rem; gap: 1.2rem; border-bottom: 1px solid var(--border);
@@ -1609,9 +1569,6 @@
       .sec-inner { grid-template-columns: 1fr; gap: 2rem; }
       .contacto-inner { grid-template-columns: 1fr; gap: 2rem; }
 
-    }
-
-    @media (max-width: 480px) {
       .admin-sidebar { width: 100vw; }
     }
 
@@ -1810,7 +1767,6 @@
     </a>
     <div id="nav-links"></div>
     <div class="nav-right">
-      <a id="btn-ecommerce-nav" href="ecommerce.html" style="display:none;">🛍️ Tienda</a>
       <button id="btn-menu">☰</button>
       <button id="btn-admin">Admin</button>
     </div>
@@ -1822,7 +1778,6 @@
       <span class="hero-eyebrow" id="hero-eyebrow">Bienvenidos</span>
       <h1 id="hero-titulo">Construimos<br/>experiencias digitales</h1>
       <p id="hero-desc">Explorá nuestro trabajo y conocé todo lo que podemos hacer por vos.</p>
-      <a id="btn-ecommerce-hero" href="ecommerce.html" class="btn-ecommerce-hero" style="display:none;">Ver tienda online →</a>
       <div class="hero-scroll">
         <div class="scroll-line"></div>
         Scroll
@@ -2150,13 +2105,6 @@
             <label for="ad-alternas">Secciones con fondo alterno</label>
             <label class="toggle-switch">
               <input type="checkbox" id="ad-alternas" checked />
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-          <div class="toggle-row">
-            <label for="ad-ecommerce">Activar tienda online (link a ecommerce.html)</label>
-            <label class="toggle-switch">
-              <input type="checkbox" id="ad-ecommerce" />
               <span class="toggle-slider"></span>
             </label>
           </div>
