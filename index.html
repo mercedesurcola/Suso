@@ -225,6 +225,8 @@
 
       // Navbar
       document.getElementById("nav-nombre").textContent = empresa.nombre;
+      const fn = document.getElementById("footer-nombre");
+      if (fn) fn.textContent = empresa.nombre;
       if (empresa.logo) {
         document.getElementById("nav-logo").src = empresa.logo;
         document.getElementById("nav-logo").style.display = "block";
@@ -455,6 +457,163 @@
 
       // Diseño
       buildAdminDiseno(data.diseno);
+
+      // Plantillas
+      renderPlantillasCards(data.diseno);
+    }
+
+    function renderPlantillasCards(disenoActual) {
+      const grid = document.getElementById("plantillas-grid");
+      if (!grid) return;
+      grid.innerHTML = PLANTILLAS.map(pl => {
+        const c = pl.diseno.colores;
+        const isActive = disenoActual?.colores?.bg === c.bg && disenoActual?.colores?.acento === c.acento;
+        return `
+        <div class="plantilla-card ${isActive ? "active" : ""}" data-id="${pl.id}">
+          <div class="plantilla-preview" style="background:${c.bg};border-color:${c.border};">
+            <div class="pp-navbar" style="background:${c.surface};border-color:${c.border};">
+              <div class="pp-dot" style="background:${c.acento};"></div>
+              <div class="pp-line" style="background:${c.muted};width:40%;"></div>
+              <div class="pp-line" style="background:${c.muted};width:20%;"></div>
+            </div>
+            <div class="pp-hero" style="background:${c.bg};">
+              <div class="pp-line pp-title" style="background:${c.texto};width:70%;height:8px;"></div>
+              <div class="pp-line" style="background:${c.muted};width:50%;"></div>
+              <div class="pp-btn" style="background:${pl.diseno.botones.estilo === 'solid' ? c.acento : 'transparent'};border:2px solid ${c.acento};border-radius:${Math.min(parseInt(pl.diseno.botones.radio),6)}px;color:${pl.diseno.botones.estilo === 'solid' ? c.bg : c.acento};">Ver más</div>
+            </div>
+            <div class="pp-section" style="background:${c.surface};border-color:${c.border};">
+              <div class="pp-line" style="background:${c.acento};width:20%;height:3px;"></div>
+              <div class="pp-line" style="background:${c.texto};width:60%;height:6px;"></div>
+              <div class="pp-line" style="background:${c.muted};width:80%;"></div>
+              <div class="pp-line" style="background:${c.muted};width:65%;"></div>
+            </div>
+          </div>
+          <div class="plantilla-info">
+            <strong style="color:${isActive ? 'var(--gold)' : 'var(--text)'}">${pl.nombre}</strong>
+            <span>${pl.descripcion}</span>
+            <span class="plantilla-perfil">${pl.perfil}</span>
+          </div>
+          <button class="btn-apply-plantilla" data-id="${pl.id}">${isActive ? "✓ Aplicada" : "Aplicar"}</button>
+        </div>`;
+      }).join("");
+
+      grid.querySelectorAll(".btn-apply-plantilla").forEach(btn => {
+        btn.addEventListener("click", e => {
+          applyPlantilla(e.target.dataset.id);
+          // Actualizar textos de los botones
+          grid.querySelectorAll(".btn-apply-plantilla").forEach(b => {
+            b.textContent = b.dataset.id === e.target.dataset.id ? "✓ Aplicada" : "Aplicar";
+          });
+          grid.querySelectorAll(".plantilla-info strong").forEach((s, i) => {
+            s.style.color = PLANTILLAS[i].id === e.target.dataset.id ? "var(--gold)" : "var(--text)";
+          });
+        });
+      });
+
+      const btnDeshacer = document.getElementById("btn-deshacer-plantilla");
+      if (btnDeshacer) {
+        btnDeshacer.addEventListener("click", () => {
+          deshacerPlantilla();
+          renderPlantillasCards(collectDiseno());
+        });
+      }
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    //  PLANTILLAS
+    // ══════════════════════════════════════════════════════════════
+    const PLANTILLAS = [
+      {
+        id:          "nocturna",
+        nombre:      "Nocturna",
+        descripcion: "Dark luxury · Profesionales & servicios premium",
+        perfil:      "Psicólogos, coaches, consultoras, estudios creativos",
+        diseno: {
+          colores: {
+            bg:        "#0F0F0F",
+            surface:   "#1A1A1A",
+            border:    "#2D2D2D",
+            texto:     "#F5F0E8",
+            muted:     "#8A8078",
+            acento:    "#C8A96E",
+            acentoDim: "#7A6543"
+          },
+          tipografia: { display: "Playfair Display", body: "Inter" },
+          botones:    { estilo: "solid", radio: "6" },
+          secciones:  { alternas: true }
+        }
+      },
+      {
+        id:          "clinica",
+        nombre:      "Clínica",
+        descripcion: "Limpio & profesional · Salud y servicios de confianza",
+        perfil:      "Médicos, abogados, contadores, arquitectos",
+        diseno: {
+          colores: {
+            bg:        "#F7F8FA",
+            surface:   "#FFFFFF",
+            border:    "#DDE3EC",
+            texto:     "#1A2333",
+            muted:     "#6B7A99",
+            acento:    "#1A6B8A",
+            acentoDim: "#134F68"
+          },
+          tipografia: { display: "Lora", body: "DM Sans" },
+          botones:    { estilo: "solid", radio: "8" },
+          secciones:  { alternas: true }
+        }
+      },
+      {
+        id:          "estudio",
+        nombre:      "Estudio",
+        descripcion: "Editorial & sofisticado · Creativos y pymes de autor",
+        perfil:      "Diseñadores, arquitectos, fotógrafos, marcas de nicho",
+        diseno: {
+          colores: {
+            bg:        "#EFECE6",
+            surface:   "#E5E0D8",
+            border:    "#CECA C0",
+            texto:     "#1C1A17",
+            muted:     "#7A7060",
+            acento:    "#B85C38",
+            acentoDim: "#8C3E22"
+          },
+          tipografia: { display: "Raleway", body: "Work Sans" },
+          botones:    { estilo: "outline", radio: "2" },
+          secciones:  { alternas: true }
+        }
+      }
+    ];
+
+    // Fija el espacio extra en el color con typo
+    PLANTILLAS[2].diseno.colores.border = "#CECAC0";
+
+    let _disenoPrevio = null; // para poder deshacer
+
+    function applyPlantilla(plantillaId) {
+      const pl = PLANTILLAS.find(p => p.id === plantillaId);
+      if (!pl) return;
+      // Guardar diseño actual para poder deshacer
+      _disenoPrevio = collectDiseno();
+      // Aplicar en los controles del panel
+      buildAdminDiseno({ ...pl.diseno, secciones: siteData?.diseno?.secciones, ecommerce: siteData?.diseno?.ecommerce });
+      // Preview en vivo
+      applyDiseno(pl.diseno);
+      // Marcar card activa
+      document.querySelectorAll(".plantilla-card").forEach(c =>
+        c.classList.toggle("active", c.dataset.id === plantillaId)
+      );
+      // Mostrar botón deshacer
+      document.getElementById("btn-deshacer-plantilla").style.display = "inline-flex";
+    }
+
+    function deshacerPlantilla() {
+      if (!_disenoPrevio) return;
+      buildAdminDiseno({ ..._disenoPrevio, secciones: siteData?.diseno?.secciones });
+      applyDiseno(_disenoPrevio);
+      _disenoPrevio = null;
+      document.querySelectorAll(".plantilla-card").forEach(c => c.classList.remove("active"));
+      document.getElementById("btn-deshacer-plantilla").style.display = "none";
     }
 
     // ── Build panel diseño ────────────────────────────────────────
@@ -865,6 +1024,16 @@
         }
       });
 
+      // Tabs del admin
+      document.querySelectorAll(".admin-tab").forEach(tab => {
+        tab.addEventListener("click", () => {
+          document.querySelectorAll(".admin-tab").forEach(t => t.classList.remove("active"));
+          document.querySelectorAll(".admin-tab-panel").forEach(p => p.classList.remove("active"));
+          tab.classList.add("active");
+          document.getElementById(`tab-${tab.dataset.tab}`).classList.add("active");
+        });
+      });
+
       // Navbar scroll
       window.addEventListener("scroll", () => {
         document.getElementById("navbar").classList.toggle("scrolled", window.scrollY > 40);
@@ -1058,8 +1227,8 @@
       align-items: center;
     }
 
-    /* Media siempre a la izquierda, texto a la derecha */
-    .sec-media { order: -1; }
+    /* Media siempre a la derecha, texto a la izquierda */
+    .sec-media { order: 1; }
 
     .sec-inner:has(.sec-media:empty),
     .sec-inner:not(:has(.sec-media)) {
@@ -1396,7 +1565,6 @@
 
     .admin-body {
       flex: 1; overflow-y: auto; padding: 1.5rem;
-      display: flex; flex-direction: column; gap: 2rem;
     }
 
     .admin-section-title {
@@ -1630,6 +1798,115 @@
 
     @media (max-width: 480px) {
       .admin-sidebar { width: 100vw; }
+    }
+
+    /* ═══════════════════════════════════════
+       ADMIN TABS
+    ═══════════════════════════════════════ */
+    .admin-tabs {
+      display: flex; flex-shrink: 0;
+      border-bottom: 1px solid var(--border);
+      background: #0D0D0D;
+    }
+
+    .admin-tab {
+      flex: 1; background: none; border: none;
+      color: var(--muted); font-size: 0.75rem;
+      font-weight: 500; letter-spacing: 0.04em;
+      padding: 0.9rem 0.4rem; cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all var(--transition);
+      white-space: nowrap;
+    }
+
+    .admin-tab:hover { color: var(--text); }
+
+    .admin-tab.active {
+      color: var(--gold);
+      border-bottom-color: var(--gold);
+      background: rgba(200,169,110,0.04);
+    }
+
+    .admin-tab-panel {
+      display: none;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .admin-tab-panel.active { display: flex; }
+
+    /* ═══════════════════════════════════════
+       PLANTILLAS
+    ═══════════════════════════════════════ */
+    .plantillas-grid {
+      display: flex; flex-direction: column; gap: 0.8rem;
+    }
+
+    .plantilla-card {
+      border: 1px solid var(--border); border-radius: 10px;
+      overflow: hidden; cursor: pointer;
+      transition: border-color var(--transition), transform var(--transition);
+      background: var(--surface);
+    }
+
+    .plantilla-card:hover { border-color: var(--gold); transform: translateY(-1px); }
+    .plantilla-card.active { border-color: var(--gold); border-width: 2px; }
+
+    /* Mini preview del sitio */
+    .plantilla-preview {
+      border-bottom: 1px solid; overflow: hidden;
+    }
+
+    .pp-navbar {
+      display: flex; align-items: center; gap: 6px;
+      padding: 6px 10px; border-bottom: 1px solid;
+    }
+
+    .pp-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+
+    .pp-line {
+      height: 4px; border-radius: 2px; margin: 3px 0;
+    }
+
+    .pp-hero {
+      padding: 14px 12px 10px; display: flex;
+      flex-direction: column; gap: 4px;
+    }
+
+    .pp-title { height: 8px !important; margin-bottom: 2px; }
+
+    .pp-btn {
+      align-self: flex-start; margin-top: 6px;
+      font-size: 7px; font-weight: 700;
+      padding: 3px 8px; letter-spacing: 0.04em;
+    }
+
+    .pp-section {
+      padding: 10px 12px; border-top: 1px solid;
+      display: flex; flex-direction: column; gap: 4px;
+    }
+
+    .plantilla-info {
+      padding: 0.7rem 0.9rem 0.3rem;
+      display: flex; flex-direction: column; gap: 2px;
+    }
+
+    .plantilla-info strong { font-size: 0.88rem; }
+    .plantilla-info span   { font-size: 0.75rem; color: var(--muted); }
+    .plantilla-perfil      { font-size: 0.7rem !important; font-style: italic; }
+
+    .btn-apply-plantilla {
+      margin: 0.4rem 0.9rem 0.8rem;
+      background: none; border: 1px solid var(--border);
+      color: var(--muted); border-radius: var(--radius);
+      padding: 6px 14px; font-size: 0.78rem;
+      cursor: pointer; transition: all var(--transition);
+      width: calc(100% - 1.8rem);
+    }
+
+    .btn-apply-plantilla:hover,
+    .plantilla-card.active .btn-apply-plantilla {
+      border-color: var(--gold); color: var(--gold);
     }
 
     /* ═══════════════════════════════════════
@@ -1916,6 +2193,10 @@
   <!-- ═══════════════ FOOTER ═══════════════ -->
   <footer>
     <span id="footer-nombre">Mi Empresa</span> · Todos los derechos reservados
+    <br/>
+    <a id="btn-descargar-manual" href="manual.html" download style="font-size:0.75rem;color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;gap:5px;margin-top:0.5rem;transition:color 0.2s;">
+      📄 Descargar manual de usuario
+    </a>
     <br/><span style="font-size:0.7rem;opacity:0.5;">Desarrollado por <a href="https://www.cusol.com.ar" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">cusol.com.ar</a></span>
   </footer>
 
@@ -1929,7 +2210,7 @@
     <div class="login-box">
       <button id="btn-login-close">✕</button>
       <h3>Panel de Administración</h3>
-      <p>Ingresá tus credenciales para continuar.</p>
+      <p>Ingresá el usuario y contraseña que te proporcionó tu administrador.</p>
       <label>Usuario</label>
       <input id="login-user" type="text" placeholder="admin" autocomplete="username" />
       <label>Contraseña</label>
@@ -1952,231 +2233,262 @@
         <button id="btn-admin-close">Cerrar</button>
       </div>
 
+      <div class="admin-tabs">
+        <button class="admin-tab active" data-tab="empresa">🏢 Empresa</button>
+        <button class="admin-tab" data-tab="secciones">📄 Secciones</button>
+        <button class="admin-tab" data-tab="diseno">🎨 Diseño</button>
+      </div>
+
       <div class="admin-body">
 
-        <!-- Empresa -->
-        <div>
-          <p class="admin-section-title">Empresa</p>
-          <div class="admin-block">
-            <label>Nombre de la empresa</label>
-            <input id="a-nombre" type="text" />
-            <label>Logo</label>
-            <div class="logo-row">
-              <img id="logo-preview" alt="Logo actual" />
-              <label class="btn-upload-label">
-                📷 Subir logo
-                <input id="logo-upload" type="file" accept="image/*" />
-              </label>
-            </div>
-          </div>
-        </div>
+        <!-- ══ TAB 1: EMPRESA ══ -->
+        <div class="admin-tab-panel active" id="tab-empresa">
 
-        <!-- Portada -->
-        <div>
-          <p class="admin-section-title">Portada</p>
-          <div class="admin-block">
-            <label>Texto pequeño (eyebrow)</label>
-            <input id="a-p-eyebrow" type="text" placeholder="ej: Bienvenidos" />
-            <label>Título principal</label>
-            <textarea id="a-p-titulo" rows="3" placeholder="ej: Construimos&#10;experiencias digitales" style="resize:vertical;"></textarea>
-            <p style="font-size:0.72rem;color:var(--muted);margin-top:-4px;">Usá Enter para saltos de línea en el título.</p>
-            <label>Subtítulo / descripción</label>
-            <textarea id="a-p-subtitulo" rows="3" placeholder="Descripción breve de la empresa o propuesta de valor."></textarea>
-          </div>
-        </div>
-
-        <!-- Secciones -->
-        <div>
-          <p class="admin-section-title">Secciones</p>
-          <div id="admin-secciones"></div>
-          <button id="btn-add-sec">+ Agregar sección</button>
-        </div>
-
-        <!-- Contacto -->
-        <div>
-          <p class="admin-section-title">Sección de Contacto</p>
-          <div class="admin-block">
-            <label>Título</label>
-            <input id="a-c-titulo" type="text" />
-            <label>Subtítulo</label>
-            <input id="a-c-subtitulo" type="text" />
-            <label>Texto introductorio</label>
-            <textarea id="a-c-texto" rows="3"></textarea>
-            <label>Email</label>
-            <input id="a-c-email" type="email" />
-            <label>Teléfono</label>
-            <input id="a-c-tel" type="tel" />
-            <label>Dirección</label>
-            <input id="a-c-dir" type="text" />
-            <label>WhatsApp (número con código de país, ej: 5491100000000)</label>
-            <input id="a-c-wa" type="tel" placeholder="5491100000000" />
-            <label>Mensaje de WhatsApp (lo que se envía al abrir el chat)</label>
-            <input id="a-c-wamsg" type="text" placeholder="Hola, me interesa..." />
-            <label>Instagram (usuario o URL del perfil)</label>
-            <input id="a-c-ig" type="text" placeholder="@usuario o https://instagram.com/usuario" />
-          </div>
-        </div>
-
-        <!-- ══ DISEÑO ══ -->
-        <div>
-          <p class="admin-section-title">🎨 Diseño</p>
-
-          <!-- Colores -->
-          <p style="font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:0.6rem;">Paleta de colores</p>
-          <div class="color-row">
-
-            <div class="color-field">
-              <label>Fondo principal</label>
-              <div class="color-input-group">
-                <input type="color" id="ad-bg" value="#0F0F0F" />
-                <input type="text"  id="ad-bg-hex" value="#0F0F0F" maxlength="7" />
-              </div>
-            </div>
-
-            <div class="color-field">
-              <label>Superficies</label>
-              <div class="color-input-group">
-                <input type="color" id="ad-surface" value="#1A1A1A" />
-                <input type="text"  id="ad-surface-hex" value="#1A1A1A" maxlength="7" />
-              </div>
-            </div>
-
-            <div class="color-field">
-              <label>Bordes</label>
-              <div class="color-input-group">
-                <input type="color" id="ad-border" value="#2D2D2D" />
-                <input type="text"  id="ad-border-hex" value="#2D2D2D" maxlength="7" />
-              </div>
-            </div>
-
-            <div class="color-field">
-              <label>Texto</label>
-              <div class="color-input-group">
-                <input type="color" id="ad-texto" value="#F5F0E8" />
-                <input type="text"  id="ad-texto-hex" value="#F5F0E8" maxlength="7" />
-              </div>
-            </div>
-
-            <div class="color-field">
-              <label>Texto secundario</label>
-              <div class="color-input-group">
-                <input type="color" id="ad-muted" value="#8A8078" />
-                <input type="text"  id="ad-muted-hex" value="#8A8078" maxlength="7" />
-              </div>
-            </div>
-
-            <div class="color-field">
-              <label>Color acento</label>
-              <div class="color-input-group">
-                <input type="color" id="ad-acento" value="#C8A96E" />
-                <input type="text"  id="ad-acento-hex" value="#C8A96E" maxlength="7" />
-              </div>
-            </div>
-
-            <div class="color-field" style="grid-column:1/-1">
-              <label>Acento oscuro (hover)</label>
-              <div class="color-input-group">
-                <input type="color" id="ad-acentodim" value="#7A6543" />
-                <input type="text"  id="ad-acentodim-hex" value="#7A6543" maxlength="7" />
-              </div>
-            </div>
-
-          </div>
-
-          <!-- Tipografía -->
-          <p style="font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin:1.2rem 0 0.6rem;">Tipografía</p>
-          <div class="admin-block">
-            <label>Fuente de títulos</label>
-            <select id="ad-font-display" class="font-select">
-              <option>Playfair Display</option>
-              <option>Merriweather</option>
-              <option>Lora</option>
-              <option>Cormorant Garamond</option>
-              <option>DM Serif Display</option>
-              <option>Libre Baskerville</option>
-              <option>EB Garamond</option>
-              <option>Abril Fatface</option>
-              <option>Raleway</option>
-              <option>Oswald</option>
-              <option>Montserrat</option>
-              <option>Poppins</option>
-              <option>Nunito</option>
-              <option>Bebas Neue</option>
-            </select>
-            <label>Fuente de texto y UI</label>
-            <select id="ad-font-body" class="font-select">
-              <option>Inter</option>
-              <option>Roboto</option>
-              <option>Open Sans</option>
-              <option>Lato</option>
-              <option>Source Sans 3</option>
-              <option>Nunito Sans</option>
-              <option>DM Sans</option>
-              <option>Manrope</option>
-              <option>Work Sans</option>
-              <option>Karla</option>
-              <option>Mulish</option>
-              <option>Plus Jakarta Sans</option>
-            </select>
-            <div id="font-preview">
-              <div class="fp-display">Playfair Display</div>
-              <div class="fp-body">Inter — El texto del cuerpo usa esta tipografía para párrafos y UI.</div>
-            </div>
-          </div>
-
-          <!-- Estilo de botones -->
-          <p style="font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin:1.2rem 0 0.6rem;">Estilo de botones</p>
-          <div class="btn-estilo-grid">
-            <div>
-              <input type="radio" name="btn-estilo" id="ad-btn-estilo" value="solid" class="btn-estilo-opt" checked />
-              <label for="ad-btn-estilo">
-                <div class="btn-estilo-preview bep-solid">Acción</div>
-                Sólido
-              </label>
-            </div>
-            <div>
-              <input type="radio" name="btn-estilo" id="ad-btn-estilo-outline" value="outline" class="btn-estilo-opt" />
-              <label for="ad-btn-estilo-outline">
-                <div class="btn-estilo-preview bep-outline">Acción</div>
-                Contorno
-              </label>
-            </div>
-            <div>
-              <input type="radio" name="btn-estilo" id="ad-btn-estilo-ghost" value="ghost" class="btn-estilo-opt" />
-              <label for="ad-btn-estilo-ghost">
-                <div class="btn-estilo-preview bep-ghost">Acción</div>
-                Texto
-              </label>
-            </div>
-          </div>
-
-          <!-- Radio de bordes -->
-          <p style="font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin:1.2rem 0 0.6rem;">Radio de bordes</p>
-          <div class="radius-row">
-            <input type="range" id="ad-btn-radio" min="0" max="40" value="6" step="1" />
-            <span id="ad-btn-radio-val">6px</span>
-          </div>
+          <!-- Empresa -->
           <div>
-            <span id="btn-preview" style="background:#C8A96E;color:#0F0F0F;border:2px solid #C8A96E;border-radius:6px;padding:10px 22px;font-weight:600;font-size:0.88rem;display:inline-block;margin-top:0.5rem;cursor:default;">
-              Vista previa
-            </span>
+            <p class="admin-section-title">Empresa</p>
+            <div class="admin-block">
+              <label>Nombre de la empresa</label>
+              <input id="a-nombre" type="text" />
+              <label>Logo</label>
+              <div class="logo-row">
+                <img id="logo-preview" alt="Logo actual" />
+                <label class="btn-upload-label">
+                  📷 Subir logo
+                  <input id="logo-upload" type="file" accept="image/*" />
+                </label>
+              </div>
+            </div>
           </div>
 
-          <!-- Layout -->
-          <p style="font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin:1.2rem 0 0.6rem;">Layout</p>
-          <div class="toggle-row">
-            <label for="ad-alternas">Secciones con fondo alterno</label>
-            <label class="toggle-switch">
-              <input type="checkbox" id="ad-alternas" checked />
-              <span class="toggle-slider"></span>
-            </label>
+          <!-- Portada -->
+          <div>
+            <p class="admin-section-title">Portada</p>
+            <div class="admin-block">
+              <label>Texto pequeño (eyebrow)</label>
+              <input id="a-p-eyebrow" type="text" placeholder="ej: Bienvenidos" />
+              <label>Título principal</label>
+              <textarea id="a-p-titulo" rows="3" placeholder="ej: Construimos&#10;experiencias digitales" style="resize:vertical;"></textarea>
+              <p style="font-size:0.72rem;color:var(--muted);margin-top:-4px;">Usá Enter para saltos de línea en el título.</p>
+              <label>Subtítulo / descripción</label>
+              <textarea id="a-p-subtitulo" rows="3" placeholder="Descripción breve de la empresa o propuesta de valor."></textarea>
+            </div>
           </div>
-          <div class="toggle-row">
-            <label for="ad-ecommerce">Activar tienda online (link a ecommerce.html)</label>
-            <label class="toggle-switch">
-              <input type="checkbox" id="ad-ecommerce" />
-              <span class="toggle-slider"></span>
-            </label>
+
+        </div>
+
+        <!-- ══ TAB 2: SECCIONES ══ -->
+        <div class="admin-tab-panel" id="tab-secciones">
+
+          <!-- Secciones -->
+          <div>
+            <p class="admin-section-title">Secciones</p>
+            <div id="admin-secciones"></div>
+            <button id="btn-add-sec">+ Agregar sección</button>
+          </div>
+
+          <!-- Contacto -->
+          <div>
+            <p class="admin-section-title">Sección de Contacto</p>
+            <div class="admin-block">
+              <label>Título</label>
+              <input id="a-c-titulo" type="text" />
+              <label>Subtítulo</label>
+              <input id="a-c-subtitulo" type="text" />
+              <label>Texto introductorio</label>
+              <textarea id="a-c-texto" rows="3"></textarea>
+              <label>Email</label>
+              <input id="a-c-email" type="email" />
+              <label>Teléfono</label>
+              <input id="a-c-tel" type="tel" />
+              <label>Dirección</label>
+              <input id="a-c-dir" type="text" />
+              <label>WhatsApp (número con código de país, ej: 5491100000000)</label>
+              <input id="a-c-wa" type="tel" placeholder="5491100000000" />
+              <label>Mensaje de WhatsApp (lo que se envía al abrir el chat)</label>
+              <input id="a-c-wamsg" type="text" placeholder="Hola, me interesa..." />
+              <label>Instagram (usuario o URL del perfil)</label>
+              <input id="a-c-ig" type="text" placeholder="@usuario o https://instagram.com/usuario" />
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ══ TAB 3: DISEÑO ══ -->
+        <div class="admin-tab-panel" id="tab-diseno">
+
+          <!-- Plantillas -->
+          <div>
+            <p class="admin-section-title">✦ Plantillas</p>
+            <p style="font-size:0.8rem;color:var(--muted);margin-bottom:1rem;line-height:1.5;">Elegí una base visual. Podés personalizar colores, tipografías y botones después.</p>
+            <div class="plantillas-grid" id="plantillas-grid"></div>
+            <button id="btn-deshacer-plantilla" style="display:none;margin-top:0.8rem;width:100%;background:none;border:1px solid var(--border);color:var(--muted);border-radius:var(--radius);padding:9px;font-size:0.82rem;cursor:pointer;transition:all var(--transition);">
+              ↩ Deshacer cambio de plantilla
+            </button>
+          </div>
+
+          <!-- Diseño -->
+          <div>
+            <p class="admin-section-title">🎨 Diseño personalizado</p>
+
+            <!-- Colores -->
+            <p style="font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:0.6rem;">Paleta de colores</p>
+            <div class="color-row">
+
+              <div class="color-field">
+                <label>Fondo principal</label>
+                <div class="color-input-group">
+                  <input type="color" id="ad-bg" value="#0F0F0F" />
+                  <input type="text"  id="ad-bg-hex" value="#0F0F0F" maxlength="7" />
+                </div>
+              </div>
+
+              <div class="color-field">
+                <label>Superficies</label>
+                <div class="color-input-group">
+                  <input type="color" id="ad-surface" value="#1A1A1A" />
+                  <input type="text"  id="ad-surface-hex" value="#1A1A1A" maxlength="7" />
+                </div>
+              </div>
+
+              <div class="color-field">
+                <label>Bordes</label>
+                <div class="color-input-group">
+                  <input type="color" id="ad-border" value="#2D2D2D" />
+                  <input type="text"  id="ad-border-hex" value="#2D2D2D" maxlength="7" />
+                </div>
+              </div>
+
+              <div class="color-field">
+                <label>Texto</label>
+                <div class="color-input-group">
+                  <input type="color" id="ad-texto" value="#F5F0E8" />
+                  <input type="text"  id="ad-texto-hex" value="#F5F0E8" maxlength="7" />
+                </div>
+              </div>
+
+              <div class="color-field">
+                <label>Texto secundario</label>
+                <div class="color-input-group">
+                  <input type="color" id="ad-muted" value="#8A8078" />
+                  <input type="text"  id="ad-muted-hex" value="#8A8078" maxlength="7" />
+                </div>
+              </div>
+
+              <div class="color-field">
+                <label>Color acento</label>
+                <div class="color-input-group">
+                  <input type="color" id="ad-acento" value="#C8A96E" />
+                  <input type="text"  id="ad-acento-hex" value="#C8A96E" maxlength="7" />
+                </div>
+              </div>
+
+              <div class="color-field" style="grid-column:1/-1">
+                <label>Acento oscuro (hover)</label>
+                <div class="color-input-group">
+                  <input type="color" id="ad-acentodim" value="#7A6543" />
+                  <input type="text"  id="ad-acentodim-hex" value="#7A6543" maxlength="7" />
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Tipografía -->
+            <p style="font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin:1.2rem 0 0.6rem;">Tipografía</p>
+            <div class="admin-block">
+              <label>Fuente de títulos</label>
+              <select id="ad-font-display" class="font-select">
+                <option>Playfair Display</option>
+                <option>Merriweather</option>
+                <option>Lora</option>
+                <option>Cormorant Garamond</option>
+                <option>DM Serif Display</option>
+                <option>Libre Baskerville</option>
+                <option>EB Garamond</option>
+                <option>Abril Fatface</option>
+                <option>Raleway</option>
+                <option>Oswald</option>
+                <option>Montserrat</option>
+                <option>Poppins</option>
+                <option>Nunito</option>
+                <option>Bebas Neue</option>
+              </select>
+              <label>Fuente de texto y UI</label>
+              <select id="ad-font-body" class="font-select">
+                <option>Inter</option>
+                <option>Roboto</option>
+                <option>Open Sans</option>
+                <option>Lato</option>
+                <option>Source Sans 3</option>
+                <option>Nunito Sans</option>
+                <option>DM Sans</option>
+                <option>Manrope</option>
+                <option>Work Sans</option>
+                <option>Karla</option>
+                <option>Mulish</option>
+                <option>Plus Jakarta Sans</option>
+              </select>
+              <div id="font-preview">
+                <div class="fp-display">Playfair Display</div>
+                <div class="fp-body">Inter — El texto del cuerpo usa esta tipografía para párrafos y UI.</div>
+              </div>
+            </div>
+
+            <!-- Estilo de botones -->
+            <p style="font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin:1.2rem 0 0.6rem;">Estilo de botones</p>
+            <div class="btn-estilo-grid">
+              <div>
+                <input type="radio" name="btn-estilo" id="ad-btn-estilo" value="solid" class="btn-estilo-opt" checked />
+                <label for="ad-btn-estilo">
+                  <div class="btn-estilo-preview bep-solid">Acción</div>
+                  Sólido
+                </label>
+              </div>
+              <div>
+                <input type="radio" name="btn-estilo" id="ad-btn-estilo-outline" value="outline" class="btn-estilo-opt" />
+                <label for="ad-btn-estilo-outline">
+                  <div class="btn-estilo-preview bep-outline">Acción</div>
+                  Contorno
+                </label>
+              </div>
+              <div>
+                <input type="radio" name="btn-estilo" id="ad-btn-estilo-ghost" value="ghost" class="btn-estilo-opt" />
+                <label for="ad-btn-estilo-ghost">
+                  <div class="btn-estilo-preview bep-ghost">Acción</div>
+                  Texto
+                </label>
+              </div>
+            </div>
+
+            <!-- Radio de bordes -->
+            <p style="font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin:1.2rem 0 0.6rem;">Radio de bordes</p>
+            <div class="radius-row">
+              <input type="range" id="ad-btn-radio" min="0" max="40" value="6" step="1" />
+              <span id="ad-btn-radio-val">6px</span>
+            </div>
+            <div>
+              <span id="btn-preview" style="background:#C8A96E;color:#0F0F0F;border:2px solid #C8A96E;border-radius:6px;padding:10px 22px;font-weight:600;font-size:0.88rem;display:inline-block;margin-top:0.5rem;cursor:default;">
+                Vista previa
+              </span>
+            </div>
+
+            <!-- Layout -->
+            <p style="font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin:1.2rem 0 0.6rem;">Layout</p>
+            <div class="toggle-row">
+              <label for="ad-alternas">Secciones con fondo alterno</label>
+              <label class="toggle-switch">
+                <input type="checkbox" id="ad-alternas" checked />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="toggle-row">
+              <label for="ad-ecommerce">Activar tienda online (link a ecommerce.html)</label>
+              <label class="toggle-switch">
+                <input type="checkbox" id="ad-ecommerce" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
           </div>
 
         </div>
